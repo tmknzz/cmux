@@ -487,6 +487,10 @@ struct cmuxApp: App {
                     appDelegate.debugLogForegroundPid(nil)
                 }
 
+                Button("Log Foreground Processes (all surfaces)") {
+                    appDelegate.debugLogForegroundProcesses(nil)
+                }
+
                 Divider()
                 Menu("Debug Windows") {
                     Button("Background Debug…") {
@@ -528,6 +532,9 @@ struct cmuxApp: App {
                     }
                     Button("File Explorer Style Debug…") {
                         FileExplorerStyleDebugWindowController.shared.show()
+                    }
+                    Button("Foreground Process Probe Debug Window") {
+                        ForegroundProcessProbeDebugWindowController.shared.show()
                     }
                     Button("Open All Debug Windows") {
                         openAllDebugWindows()
@@ -7650,5 +7657,123 @@ private struct SettingsRootView: View {
 
     private func applyCurrentSettingsWindowStyle(to window: NSWindow) {
         SettingsAboutTitlebarDebugStore.shared.applyCurrentOptions(to: window, for: .settings)
+    }
+}
+
+// MARK: - Foreground Process Probe Debug Window (T3)
+
+/// Debug window that surfaces the `@Published foregroundProcess` snapshot on
+/// every registered `TerminalSurface` (see `ForegroundProcessProbe` T1/T2).
+///
+/// Pattern mirrors `FileExplorerStyleDebugWindowController` / `SidebarDebugWindowController`
+/// so it slots into the existing Debug Windows menu without introducing a new
+/// window-lifecycle shape.
+private final class ForegroundProcessProbeDebugWindowController: NSWindowController, NSWindowDelegate {
+    static let shared = ForegroundProcessProbeDebugWindowController()
+
+    private init() {
+        let window = NSPanel(
+            contentRect: NSRect(x: 0, y: 0, width: 520, height: 360),
+            styleMask: [.titled, .closable, .resizable, .utilityWindow],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Foreground Process Probe"
+        window.titleVisibility = .visible
+        window.titlebarAppearsTransparent = false
+        window.isMovableByWindowBackground = true
+        window.isReleasedWhenClosed = false
+        window.identifier = NSUserInterfaceItemIdentifier("cmux.foregroundProcessProbeDebug")
+        window.center()
+        window.contentView = NSHostingView(rootView: ForegroundProcessProbeDebugView())
+        AppDelegate.shared?.applyWindowDecorations(to: window)
+        super.init(window: window)
+        window.delegate = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func show() {
+        window?.center()
+        window?.makeKeyAndOrderFront(nil)
+    }
+}
+
+/// SwiftUI body rendered inside `ForegroundProcessProbeDebugWindowController`.
+///
+/// Design notes:
+/// - Uses a plain `VStack` + `ForEach`, **not** `LazyVStack`. Per cmux snapshot
+///   boundary rule, views inside a lazy container may not reference
+///   ObservableObjects; using an eager `VStack` here sidesteps that concern
+///   entirely (the debug window's expected population is small: one row per
+///   open terminal surface).
+/// - Refresh is driven by a 200ms `Timer.publish` (matches probe cadence).
+///   We deliberately avoid `@ObservedObject`ing each `TerminalSurface` from
+///   the row builder: doing so would couple this debug view to the Published
+///   invalidations that the typing-latency-sensitive paths work hard to
+///   minimize. Polling the snapshot instead keeps the surface's per-keystroke
+///   invalidation graph unchanged.
+/// - The `.id(tick)` modifier forces SwiftUI to rebuild the subtree on each
+///   tick, which also re-evaluates `allSurfaces()` and picks up fresh
+///   `foregroundProcess` values without us having to observe the surface
+///   objects directly.
+/// - All strings are hard-coded English: this file-scoped view lives inside
+///   the Debug menu (DEBUG builds only) and is not subject to the L10N policy.
+///
+/// Uncertainty: if SwiftUI elides the `.id(tick)` optimization and stops
+/// rebuilding, we would need to switch to an explicit `@StateObject` wrapper
+/// that republishes on timer; haven't hit that yet in testing.
+private struct ForegroundProcessProbeDebugView: View {
+    @State private var tick: Date = Date()
+    private let timer = Timer.publish(every: 0.2, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 6) {
+                let surfaces = TerminalSurfaceRegistry.shared.allSurfaces()
+                if surfaces.isEmpty {
+                    Text("No surfaces")
+                        .font(.system(.caption, design: .monospaced))
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("surfaces=\(surfaces.count)  (refresh 200ms)")
+                        .font(.system(.caption2, design: .monospaced))
+                        .foregroundColor(.secondary)
+                    ForEach(surfaces, id: \.id) { surface in
+                        surfaceRow(surface: surface)
+                    }
+                }
+            }
+            .padding(12)
+            .font(.system(.caption, design: .monospaced))
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .id(tick)
+        .onReceive(timer) { date in
+            tick = date
+        }
+    }
+
+    @ViewBuilder
+    private func surfaceRow(surface: TerminalSurface) -> some View {
+        HStack(spacing: 10) {
+            Text(String(surface.id.uuidString.prefix(5)))
+                .foregroundColor(.secondary)
+            if let info = surface.foregroundProcess {
+                Text("pid=\(info.pid)")
+                Text("name=\(info.name)")
+                Text(info.isCLI ? "CLI" : "non-CLI")
+                    .foregroundColor(info.isCLI ? .orange : .secondary)
+                Text("t=\(info.updatedAt.formatted(date: .omitted, time: .standard))")
+                    .foregroundColor(.secondary)
+            } else {
+                Text("pid=? state=unavailable")
+                    .foregroundColor(.secondary)
+            }
+            Spacer(minLength: 0)
+        }
     }
 }

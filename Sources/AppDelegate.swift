@@ -7891,6 +7891,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         dlog("foreground_pid=\(pid) surface=\(surface.id.uuidString.prefix(5))")
     }
 
+    /// Debug dump of every registered terminal surface's current foreground
+    /// process snapshot (populated by `ForegroundProcessProbe`, T1/T2). Unlike
+    /// `debugLogForegroundPid` — which is a single-shot raw-pid smoke check —
+    /// this walks all surfaces and prints the probe-published
+    /// `ForegroundProcessInfo` (pid / name / isCLI), or `state=unavailable`
+    /// when the probe has not yet produced a value for that surface.
+    ///
+    /// Logs under the `fg.probe` tag family so it sits next to the probe's
+    /// own transition logs in the unified debug log.
+    @objc func debugLogForegroundProcesses(_ sender: Any?) {
+        let surfaces = TerminalSurfaceRegistry.shared.allSurfaces()
+        if surfaces.isEmpty {
+            dlog("fg.probe.dump reason=no_surfaces")
+            return
+        }
+        dlog("fg.probe.dump count=\(surfaces.count)")
+        for surface in surfaces {
+            let shortId = surface.id.uuidString.prefix(5)
+            if let info = surface.foregroundProcess {
+                dlog("fg.probe surface=\(shortId) pid=\(info.pid) name=\(info.name) isCLI=\(info.isCLI)")
+            } else {
+                dlog("fg.probe surface=\(shortId) state=unavailable")
+            }
+        }
+    }
+
     @objc func openDebugColorComparisonWorkspaces(_ sender: Any?) {
         guard let tabManager else { return }
 

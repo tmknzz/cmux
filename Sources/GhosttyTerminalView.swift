@@ -3743,6 +3743,12 @@ final class TerminalSurface: Identifiable, ObservableObject {
     private var portalLifecycleState: PortalLifecycleState = .live
     private var portalLifecycleGeneration: UInt64 = 1
     private var activePortalHostLease: PortalHostLease?
+    /// Per-surface probe that samples the foreground process (via
+    /// `ghostty_surface_foreground_pid`) at 200ms cadence. Owned for the full
+    /// lifetime of the `TerminalSurface`; started from `createSurface(for:)`
+    /// once the runtime surface is live, and stopped from `teardownSurface()`
+    /// and `deinit`. `stop()` is idempotent.
+    private let foregroundProbe = ForegroundProcessProbe()
     @Published var searchState: SearchState? = nil {
 	        didSet {
 	            if let searchState {
@@ -3778,6 +3784,12 @@ final class TerminalSurface: Identifiable, ObservableObject {
         }
     }
     @Published private(set) var keyboardCopyModeActive: Bool = false
+    /// Snapshot of the foreground process attached to this surface, or `nil`
+    /// when no foreground is observable (surface not yet live, torn down, or
+    /// the kernel reports no foreground pid). Updated by `foregroundProbe` on
+    /// pid transitions only — identical pids are debounced inside the probe,
+    /// so SwiftUI observers do not churn every 200ms tick.
+    @Published private(set) var foregroundProcess: ForegroundProcessInfo? = nil
     private var searchNeedleCancellable: AnyCancellable?
     var currentKeyStateIndicatorText: String? { surfaceView.currentKeyStateIndicatorText }
 
@@ -4142,10 +4154,61 @@ final class TerminalSurface: Identifiable, ObservableObject {
 #endif
     }
 
+    /// Wire up `foregroundProbe` to sample this surface's foreground pid at
+    /// 200ms cadence and mirror transitions into `@Published foregroundProcess`.
+    ///
+    /// Called once from `createSurface(for:)` after the runtime surface exists.
+    /// `foregroundProbe.start(_:_:)` replaces any previous session cleanly, so
+    /// calling this twice (e.g. after a surface recreation) is safe.
+    ///
+    /// Design notes:
+    /// - `onTick` runs on the main actor per the `ghostty_surface_t` contract.
+    ///   We use `hasLiveSurface` as a cheap gate *before* calling
+    ///   `liveSurfaceForGhosttyAccess(reason:)`, because the latter has side
+    ///   effects on stale pointers (it records a teardown request and seals
+    ///   the portal lifecycle). At 200ms cadence we do not want to generate
+    ///   `recordTeardownRequest` churn for a surface that is merely idle.
+    ///   The gate is a pure local read (`surface != nil && portalLifecycleState == .live`)
+    ///   so it is strictly cheaper than `liveSurfaceForGhosttyAccess`.
+    /// - `onUpdate` is delivered on the probe's internal serial queue. We bounce
+    ///   back to the main actor before mutating `@Published foregroundProcess`
+    ///   so ObservableObject emissions stay main-isolated.
+    /// - `[weak self]` on both closures prevents a retain cycle through the
+    ///   probe's captured callbacks.
+    ///
+    /// Not marked `@MainActor` because `foregroundProbe.start(_:_:)` itself is
+    /// nonisolated; main-actor constraints are enforced on the `onTick` closure
+    /// via its `@MainActor` function type. The caller (`createSurface(for:)`)
+    /// is nonisolated and would otherwise fail to call this synchronously.
+    private func startForegroundProbe() {
+        foregroundProbe.start(
+            onTick: { [weak self] in
+                guard let self else { return nil }
+                // Cheap gate: skip the `liveSurfaceForGhosttyAccess` side-effecting
+                // path when the surface is not live. See Why above.
+                guard self.hasLiveSurface else { return nil }
+                guard let handle = self.liveSurfaceForGhosttyAccess(reason: "foreground.probe") else {
+                    return nil
+                }
+                return ghostty_surface_foreground_pid(handle)
+            },
+            onUpdate: { [weak self] info in
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.foregroundProcess = info
+                }
+            }
+        )
+#if DEBUG
+        dlog("fg.probe.start surface=\(id.uuidString.prefix(5))")
+#endif
+    }
+
     /// Explicitly free the Ghostty runtime surface. Idempotent — safe to call
     /// before deinit; deinit will skip the free if already torn down.
     @MainActor
     func teardownSurface() {
+        foregroundProbe.stop()
         recordTeardownRequest(reason: "surface.teardown")
         markPortalLifecycleClosed(reason: "teardown")
 
@@ -4619,6 +4682,7 @@ final class TerminalSurface: Identifiable, ObservableObject {
         guard let createdSurface = surface else { return }
         TerminalSurfaceRegistry.shared.registerRuntimeSurface(createdSurface, ownerId: id)
         recordRuntimeSurfaceCreation()
+        startForegroundProbe()
 
         // Session scrollback replay must be one-shot. Reusing it on a later runtime
         // surface recreation would inject stale restored output into a live shell.
@@ -5234,6 +5298,11 @@ final class TerminalSurface: Identifiable, ObservableObject {
 #endif
 
     deinit {
+        // Stop the probe first so no in-flight main-actor tick touches a
+        // half-deallocated `self`. `stop()` is idempotent; `ForegroundProcessProbe.deinit`
+        // would also stop, but we mirror cmux's explicit-teardown style here so
+        // the intent is visible at the call site.
+        foregroundProbe.stop()
         markPortalLifecycleClosed(reason: "deinit")
 
         let callbackContext = surfaceCallbackContext
