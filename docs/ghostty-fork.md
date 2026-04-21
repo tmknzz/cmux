@@ -14,7 +14,8 @@ When we change the fork, update this document and the parent submodule SHA.
 
 Fork main has advanced beyond the March 30, 2026 rebase onto upstream `main`
 at `3509ccf78` (`v1.3.1-457-g3509ccf78`).
-Current cmux pinned fork head: `3b684a085` (`tip-1717-g3b684a085`).
+Current cmux pinned fork head: `22ad48b6a` (on branch `cmux-foreground-pid-api`,
+one commit ahead of fork main at `3b684a085`; see [PR #46](https://github.com/manaflow-ai/ghostty/pull/46)).
 
 ### 1) macOS display link restart on display changes
 
@@ -120,8 +121,25 @@ tend to conflict together during rebases.
   - Wires `.apc_start`, `.apc_put`, and `.apc_end` through the shared APC parser in `TerminalStream`.
   - Restores kitty graphics execution and APC OK/error replies for the non-termio stream path used by cmux/libghostty integrations.
 
-Fork main now carries the section 8 APC handling fix plus later upstream merges;
-the current cmux pin is the head listed above.
+### 9) Foreground process PID C API
+
+- Commit: `22ad48b6a` (Add ghostty_surface_foreground_pid C API for cmux)
+- Branch: `cmux-foreground-pid-api` (pending [PR #46](https://github.com/manaflow-ai/ghostty/pull/46) against fork main)
+- Files:
+  - `include/ghostty.h`
+  - `src/apprt/embedded.zig`
+- Summary:
+  - Exposes `ghostty_surface_foreground_pid()` returning the foreground process
+    group PID (`int32_t`) of the surface's pty master, or `-1` when unavailable.
+  - Backed by the existing `Surface.getProcessInfo(.foreground_pid)` path,
+    which uses `tcgetpgrp(master_fd)` on macOS.
+  - Used by cmux to detect when a CLI tool (Claude Code / Codex / Gemini) is
+    the foreground process so it can switch Enter-key semantics on a
+    per-process basis.
+
+Fork main now carries the section 8 APC handling fix plus later upstream merges.
+The current cmux pin is the `cmux-foreground-pid-api` branch head listed above,
+which is one commit ahead of fork main at `3b684a085`.
 
 ## Upstreamed fork changes
 
@@ -164,6 +182,10 @@ These files change frequently upstream; be careful when rebasing the fork:
 - `include/ghostty.h`, `src/Surface.zig`, `src/apprt/embedded.zig`
   - Upstream removed cmux-used selection exports. Preserve the re-exported
     `ghostty_surface_select_cursor_cell` and `ghostty_surface_clear_selection` functions.
+  - Also preserve the cmux-specific `ghostty_surface_foreground_pid` export
+    (section 9). If upstream refactors `Surface.getProcessInfo` or the pty
+    process-info plumbing, keep this wrapper's `-1` fallback for `null` /
+    `> INT32_MAX` intact.
 
 - `src/renderer/generic.zig`
   - The `macos-background-from-layer` check sits next to the glass-style check in `updateFrame`.

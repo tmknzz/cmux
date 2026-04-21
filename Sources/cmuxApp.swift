@@ -483,6 +483,10 @@ struct cmuxApp: App {
                     appDelegate.openDebugStressWorkspacesWithLoadedSurfaces(nil)
                 }
 
+                Button("Log Foreground PID (smoke)") {
+                    appDelegate.debugLogForegroundPid(nil)
+                }
+
                 Divider()
                 Menu("Debug Windows") {
                     Button("Background Debug…") {

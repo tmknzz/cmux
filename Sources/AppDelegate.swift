@@ -7877,6 +7877,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         sendTextWhenReady(payload, to: tab)
     }
 
+    @objc func debugLogForegroundPid(_ sender: Any?) {
+        let surfaces = TerminalSurfaceRegistry.shared.allSurfaces()
+        guard let surface = surfaces.first else {
+            dlog("foreground_pid.skip reason=no_surface")
+            return
+        }
+        guard let handle = surface.liveSurfaceForGhosttyAccess(reason: "debug.foreground_pid") else {
+            dlog("foreground_pid.skip reason=no_live_handle surface=\(surface.id.uuidString.prefix(5))")
+            return
+        }
+        let pid = ghostty_surface_foreground_pid(handle)
+        dlog("foreground_pid=\(pid) surface=\(surface.id.uuidString.prefix(5))")
+    }
+
     @objc func openDebugColorComparisonWorkspaces(_ sender: Any?) {
         guard let tabManager else { return }
 
