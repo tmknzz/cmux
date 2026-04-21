@@ -5553,6 +5553,53 @@ class GhosttyNSView: NSView, NSUserInterfaceValidations {
         return true
     }
 
+    /// Decide whether a Return keyDown in CLI-foreground mode should be
+    /// rewritten to a bare byte (LF or CR) and routed through the text path,
+    /// bypassing Ghostty's Kitty-protocol key encoding.
+    ///
+    /// - Parameters:
+    ///   - event: The incoming `keyDown` `NSEvent`.
+    ///   - isCLI: `true` when the foreground process is a CLI (callers pass
+    ///     `terminalSurface?.foregroundProcess?.isCLI == true`).
+    /// - Returns:
+    ///   - `"\n"` (LF) when a bare Return (no modifiers) in CLI mode should be
+    ///     injected as text.
+    ///   - `"\r"` (CR) when Cmd+Return in CLI mode should be injected as text.
+    ///   - `nil` when the event is not a Return, is not in CLI mode, or has an
+    ///     unsupported modifier combination. Callers should fall through to the
+    ///     existing key-handling path.
+    ///
+    /// This is a pure function so it can be unit-tested without instantiating
+    /// an `NSView` or a Ghostty surface. It also protects the typing hot path:
+    /// for any non-Return keyCode the work is a single integer compare.
+    ///
+    /// Why rewrite: Ghostty's default path encodes Return via the Kitty
+    /// keyboard protocol, which some TUIs/CLIs in raw mode interpret as a
+    /// command sequence rather than a line terminator. Sending bare LF/CR
+    /// through the text (commit) path matches the "plain Enter" contract
+    /// these programs expect. The actual `sendText` call is the caller's
+    /// responsibility; this function only decides what (if anything) to send.
+    static func cliReturnRewriteBytes(event: NSEvent, isCLI: Bool) -> String? {
+        // Hot-path guard: everything below only runs for Return / numpad Enter.
+        // 36 = kVK_Return, 76 = kVK_ANSI_KeypadEnter.
+        let keyCode = event.keyCode
+        guard keyCode == 36 || keyCode == 76 else { return nil }
+
+        guard isCLI else { return nil }
+
+        let flags = event.modifierFlags
+            .intersection(.deviceIndependentFlagsMask)
+            .subtracting([.numericPad, .function, .capsLock])
+
+        if flags.isEmpty {
+            return "\n"
+        }
+        if flags == [.command] {
+            return "\r"
+        }
+        return nil
+    }
+
         // Visibility is used for focus gating. Explicit portal visibility transitions
         // also drive Ghostty occlusion so hidden workspace/split surfaces pause and
         // queue a redraw when they become visible again.
@@ -6869,6 +6916,30 @@ class GhosttyNSView: NSView, NSUserInterfaceValidations {
             increments: ["probeKeyDownCount": 1]
         )
 #endif
+
+        // CLI Enter/Cmd+Enter rewrite: when a tracked CLI (Claude Code/Codex/Gemini)
+        // is the foreground process, send bare LF for Return and bare CR for
+        // Cmd+Return through the text (commit) path. This avoids the Kitty
+        // keyboard protocol encoding that some CLIs interpret as a command
+        // sequence. See `cliReturnRewriteBytes(event:isCLI:)` for the full
+        // rationale and decision table.
+        if !hasMarkedText(),
+           let surfaceForRewrite = terminalSurface,
+           let rewritten = Self.cliReturnRewriteBytes(
+               event: event,
+               isCLI: surfaceForRewrite.foregroundProcess?.isCLI == true
+           )
+        {
+#if DEBUG
+            let ghosttySendStart = ProcessInfo.processInfo.systemUptime
+#endif
+            surfaceForRewrite.sendText(rewritten)
+#if DEBUG
+            ghosttySendMs = (ProcessInfo.processInfo.systemUptime - ghosttySendStart) * 1000.0
+            dlog("terminal.cliEnterRewrite bytes=\(rewritten == "\n" ? "LF" : "CR") pid=\(surfaceForRewrite.foregroundProcess?.pid ?? -1) name=\(surfaceForRewrite.foregroundProcess?.name ?? "")")
+#endif
+            return
+        }
 
         // Fast path for control-modified terminal input (for example Ctrl+D).
         //

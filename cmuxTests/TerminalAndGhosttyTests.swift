@@ -4460,3 +4460,156 @@ final class TerminalControllerSocketListenerHealthTests: XCTestCase {
         )
     }
 }
+
+// MARK: - CLI Return Rewrite Bytes
+
+/// Tests for `GhosttyNSView.cliReturnRewriteBytes(event:isCLI:)`.
+///
+/// This pure function decides whether to intercept a key event and send a
+/// bare LF / CR byte through the text (commit) path when a tracked CLI
+/// (Claude Code / Codex / Gemini) is the foreground process. The decision
+/// table is documented at the function definition in
+/// `Sources/GhosttyTerminalView.swift`.
+///
+/// Expected contract:
+///   - keyCode must be 36 (Return) or 76 (numpad Enter); otherwise nil.
+///   - isCLI must be true; otherwise nil.
+///   - deviceIndependentFlagsMask minus `.numericPad` / `.function` /
+///     `.capsLock` decides: empty -> "\n", exactly `.command` -> "\r",
+///     anything else -> nil.
+@MainActor
+final class CLIReturnRewriteBytesTests: XCTestCase {
+    /// Build a synthetic `NSEvent` of type `.keyDown` for the given keyCode
+    /// and modifier flags. The character payload is empty because
+    /// `cliReturnRewriteBytes` only inspects `keyCode` and `modifierFlags`.
+    private func makeKeyDown(keyCode: UInt16, flags: NSEvent.ModifierFlags) -> NSEvent {
+        return NSEvent.keyEvent(
+            with: .keyDown,
+            location: .zero,
+            modifierFlags: flags,
+            timestamp: 0,
+            windowNumber: 0,
+            context: nil,
+            characters: "",
+            charactersIgnoringModifiers: "",
+            isARepeat: false,
+            keyCode: keyCode
+        )!
+    }
+
+    // MARK: 1. Return on CLI with no modifiers -> LF
+
+    /// Plain Return while a tracked CLI is foreground must produce a bare
+    /// LF ("\n"), which is the "plain Enter" contract these programs expect
+    /// in raw mode.
+    func testReturnOnCLI_returnsLF() {
+        let event = makeKeyDown(keyCode: 36, flags: [])
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertEqual(result, "\n")
+    }
+
+    // MARK: 2. Numpad Enter on CLI with no modifiers -> LF
+
+    /// Numpad Enter (keyCode 76) must be treated the same as the main
+    /// Return key and produce LF.
+    func testNumpadEnterOnCLI_returnsLF() {
+        let event = makeKeyDown(keyCode: 76, flags: [])
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertEqual(result, "\n")
+    }
+
+    // MARK: 3. Cmd+Return on CLI -> CR
+
+    /// Cmd+Return is the cmux convention for "submit / newline-in-input"
+    /// depending on the CLI. The function rewrites it to a bare CR ("\r")
+    /// so the CLI receives the distinct byte it expects.
+    func testCmdReturnOnCLI_returnsCR() {
+        let event = makeKeyDown(keyCode: 36, flags: .command)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertEqual(result, "\r")
+    }
+
+    // MARK: 4. Shift+Return on CLI -> nil (fall through to Ghostty)
+
+    /// Shift+Return is not part of the rewrite contract; the function must
+    /// return nil so Ghostty's default Kitty-protocol encoding handles it.
+    func testShiftReturnOnCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 36, flags: .shift)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 5. Opt+Return on CLI -> nil
+
+    /// Option+Return is reserved for other workflows; must not be
+    /// rewritten.
+    func testOptReturnOnCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 36, flags: .option)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 6. Ctrl+Return on CLI -> nil
+
+    /// Control+Return must not be rewritten; it has its own semantics in
+    /// many CLIs.
+    func testCtrlReturnOnCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 36, flags: .control)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 7. Cmd+Shift+Return on CLI -> nil
+
+    /// Only *exactly* `.command` triggers the CR rewrite. Any additional
+    /// modifier combined with Cmd (e.g. Cmd+Shift) must fall through.
+    func testCmdShiftReturnOnCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 36, flags: [.command, .shift])
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 8. Return on non-CLI -> nil
+
+    /// When no tracked CLI is foreground, Return must never be rewritten,
+    /// regardless of keyCode/flags. This preserves normal shell / editor
+    /// behavior.
+    func testReturnOnNonCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 36, flags: [])
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: false)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 9. Non-Return key on CLI -> nil
+
+    /// The hot-path guard must reject any key other than Return / numpad
+    /// Enter, even when the CLI is foreground. keyCode 0x00 (`kVK_ANSI_A`)
+    /// stands in for any non-Return keyCode.
+    func testNonReturnOnCLI_returnsNil() {
+        let event = makeKeyDown(keyCode: 0x00, flags: [])
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertNil(result)
+    }
+
+    // MARK: 10. CapsLock+Return on CLI -> LF
+
+    /// `.capsLock` is subtracted from the flag set before the decision, so
+    /// Return with only CapsLock lit must still produce LF (the flag set
+    /// is logically empty after the subtract).
+    func testCapsLockReturnOnCLI_returnsLF() {
+        let event = makeKeyDown(keyCode: 36, flags: .capsLock)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertEqual(result, "\n")
+    }
+
+    // MARK: 11. Numpad Enter reporting `.numericPad` -> LF
+
+    /// AppKit sets `.numericPad` on numpad-originated events. That flag is
+    /// subtracted before the decision, so numpad Enter with only
+    /// `.numericPad` set must still produce LF.
+    func testNumpadEnterNumericPadFlag_returnsLF() {
+        let event = makeKeyDown(keyCode: 76, flags: .numericPad)
+        let result = GhosttyNSView.cliReturnRewriteBytes(event: event, isCLI: true)
+        XCTAssertEqual(result, "\n")
+    }
+}
