@@ -25,6 +25,9 @@ struct TerminalPanelView: View {
     var body: some View {
         // Layering contract: terminal find UI is mounted in GhosttySurfaceScrollView (AppKit portal layer)
         // via `searchState`. Rendering `SurfaceSearchOverlay` in this SwiftUI container can hide it.
+        // The focus border is also drawn in that same AppKit portal layer via
+        // `focusedBorderEnabled` / `focusedBorderColorHex` — SwiftUI overlays at this level
+        // would sit below the portal NSView and be invisible at runtime.
         GhosttyTerminalView(
             terminalSurface: panel.surface,
             paneId: paneId,
@@ -33,6 +36,8 @@ struct TerminalPanelView: View {
             portalZPriority: portalPriority,
             showsInactiveOverlay: isSplit && !isFocused,
             showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
+            focusedBorderEnabled: focusedBorderEnabled && isFocused,
+            focusedBorderColorHex: focusedBorderColorHex,
             inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
             inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
             searchState: panel.searchState,
@@ -44,22 +49,6 @@ struct TerminalPanelView: View {
         // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
         .id(panel.id)
         .background(Color.clear)
-        .overlay { focusedBorderOverlay }
-    }
-
-    @ViewBuilder
-    private var focusedBorderOverlay: some View {
-        if isFocused && focusedBorderEnabled {
-            RoundedRectangle(cornerRadius: PanelOverlayRingMetrics.cornerRadius, style: .continuous)
-                .inset(by: PanelOverlayRingMetrics.inset)
-                .stroke(
-                    Color(nsColor: NSColor(hex: focusedBorderColorHex) ?? PaneFocusBorderSettings.resolvedColor()),
-                    lineWidth: PanelOverlayRingMetrics.lineWidth
-                )
-                .allowsHitTesting(false)
-        } else {
-            EmptyView()
-        }
     }
 }
 
