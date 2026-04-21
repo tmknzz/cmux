@@ -8,6 +8,10 @@ struct TerminalPanelView: View {
     @ObservedObject var panel: TerminalPanel
     @AppStorage(NotificationPaneRingSettings.enabledKey)
     private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.enabledKey)
+    private var focusedBorderEnabled: Bool = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.colorHexKey)
+    private var focusedBorderColorHex: String = PaneFocusBorderSettings.defaultColorHex
     let paneId: PaneID
     let isFocused: Bool
     let isVisibleInUI: Bool
@@ -40,6 +44,22 @@ struct TerminalPanelView: View {
         // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
         .id(panel.id)
         .background(Color.clear)
+        .overlay { focusedBorderOverlay }
+    }
+
+    @ViewBuilder
+    private var focusedBorderOverlay: some View {
+        if isFocused && focusedBorderEnabled {
+            RoundedRectangle(cornerRadius: PanelOverlayRingMetrics.cornerRadius, style: .continuous)
+                .inset(by: PanelOverlayRingMetrics.inset)
+                .stroke(
+                    Color(nsColor: NSColor(hex: focusedBorderColorHex) ?? PaneFocusBorderSettings.resolvedColor()),
+                    lineWidth: PanelOverlayRingMetrics.lineWidth
+                )
+                .allowsHitTesting(false)
+        } else {
+            EmptyView()
+        }
     }
 }
 

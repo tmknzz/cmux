@@ -89,6 +89,8 @@ final class CmuxSettingsFileStore {
         "browser.insecureHttpHostsAllowedInEmbeddedBrowser",
         "browser.showImportHintOnBlankTabs",
         "browser.reactGrabVersion",
+        "paneAppearance.focusedBorderEnabled",
+        "paneAppearance.focusedBorderColor",
         "shortcuts.showModifierHoldHints",
         "shortcuts.bindings",
     ]
@@ -358,6 +360,9 @@ final class CmuxSettingsFileStore {
         if let notificationsSection = root["notifications"] as? [String: Any] {
             parseNotificationsSection(notificationsSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
+        if let paneAppearanceSection = root["paneAppearance"] as? [String: Any] {
+            parsePaneAppearanceSection(paneAppearanceSection, sourcePath: sourcePath, snapshot: &snapshot)
+        }
         if let sidebarSection = root["sidebar"] as? [String: Any] {
             parseSidebarSection(sidebarSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
@@ -481,6 +486,27 @@ final class CmuxSettingsFileStore {
         }
         if let raw = jsonString(section["command"]) {
             snapshot.managedUserDefaults[NotificationSoundSettings.customCommandKey] = .string(raw)
+        }
+    }
+
+    private func parsePaneAppearanceSection(
+        _ section: [String: Any],
+        sourcePath: String,
+        snapshot: inout ResolvedSettingsSnapshot
+    ) {
+        if let value = jsonBool(section["focusedBorderEnabled"]) {
+            snapshot.managedUserDefaults[PaneFocusBorderSettings.enabledKey] = .bool(value)
+        } else if section.keys.contains("focusedBorderEnabled") {
+            logInvalid("paneAppearance.focusedBorderEnabled", sourcePath: sourcePath)
+        }
+        if let raw = jsonString(section["focusedBorderColor"]) {
+            guard let normalized = WorkspaceTabColorSettings.normalizedHex(raw) else {
+                logInvalid("paneAppearance.focusedBorderColor", sourcePath: sourcePath)
+                return
+            }
+            snapshot.managedUserDefaults[PaneFocusBorderSettings.colorHexKey] = .string(normalized)
+        } else if section.keys.contains("focusedBorderColor") {
+            logInvalid("paneAppearance.focusedBorderColor", sourcePath: sourcePath)
         }
     }
 
@@ -1384,6 +1410,12 @@ final class CmuxSettingsFileStore {
                     "sound": NotificationSoundSettings.defaultValue,
                     "customSoundFilePath": NotificationSoundSettings.defaultCustomFilePath,
                     "command": NotificationSoundSettings.defaultCustomCommand,
+                ],
+            ],
+            [
+                "paneAppearance": [
+                    "focusedBorderEnabled": PaneFocusBorderSettings.defaultEnabled,
+                    "focusedBorderColor": PaneFocusBorderSettings.defaultColorHex,
                 ],
             ],
             [

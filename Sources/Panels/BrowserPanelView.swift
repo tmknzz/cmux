@@ -406,6 +406,10 @@ struct BrowserPanelView: View {
     @AppStorage(BrowserImportHintSettings.variantKey) private var browserImportHintVariantRaw = BrowserImportHintSettings.defaultVariant.rawValue
     @AppStorage(BrowserImportHintSettings.showOnBlankTabsKey) private var showBrowserImportHintOnBlankTabs = BrowserImportHintSettings.defaultShowOnBlankTabs
     @AppStorage(BrowserImportHintSettings.dismissedKey) private var isBrowserImportHintDismissed = BrowserImportHintSettings.defaultDismissed
+    @AppStorage(PaneFocusBorderSettings.enabledKey)
+    private var focusedBorderEnabled: Bool = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.colorHexKey)
+    private var focusedBorderColorHex: String = PaneFocusBorderSettings.defaultColorHex
     @ObservedObject private var keyboardShortcutSettingsObserver = KeyboardShortcutSettingsObserver.shared
     @State private var suggestionTask: Task<Void, Never>?
     @State private var isLoadingRemoteSuggestions: Bool = false
@@ -833,6 +837,22 @@ struct BrowserPanelView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .ghosttyDefaultBackgroundDidChange)) { _ in
             refreshBrowserChromeStyle()
+        }
+        .overlay { focusedBorderOverlay }
+    }
+
+    @ViewBuilder
+    private var focusedBorderOverlay: some View {
+        if isFocused && focusedBorderEnabled {
+            RoundedRectangle(cornerRadius: PanelOverlayRingMetrics.cornerRadius, style: .continuous)
+                .inset(by: PanelOverlayRingMetrics.inset)
+                .stroke(
+                    Color(nsColor: NSColor(hex: focusedBorderColorHex) ?? PaneFocusBorderSettings.resolvedColor()),
+                    lineWidth: PanelOverlayRingMetrics.lineWidth
+                )
+                .allowsHitTesting(false)
+        } else {
+            EmptyView()
         }
     }
 

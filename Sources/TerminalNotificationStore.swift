@@ -578,6 +578,38 @@ enum NotificationPaneFlashSettings {
     }
 }
 
+enum PaneFocusBorderSettings {
+    static let enabledKey = "paneFocusBorderEnabled"
+    static let colorHexKey = "paneFocusBorderColorHex"
+    static let defaultEnabled: Bool = false
+    static let defaultColorHex: String = "#5AC8FA"
+
+    static func isEnabled(defaults: UserDefaults = .standard) -> Bool {
+        if defaults.object(forKey: enabledKey) == nil {
+            return defaultEnabled
+        }
+        return defaults.bool(forKey: enabledKey)
+    }
+
+    static func colorHex(defaults: UserDefaults = .standard) -> String {
+        if defaults.object(forKey: colorHexKey) == nil {
+            return defaultColorHex
+        }
+        return defaults.string(forKey: colorHexKey) ?? defaultColorHex
+    }
+
+    static func resolvedColor(defaults: UserDefaults = .standard) -> NSColor {
+        let hex = colorHex(defaults: defaults)
+        if let color = NSColor(hex: hex) {
+            return color
+        }
+        if let fallback = NSColor(hex: defaultColorHex) {
+            return fallback
+        }
+        return NSColor.systemBlue
+    }
+}
+
 enum TaggedRunBadgeSettings {
     static let environmentKey = "CMUX_TAG"
     private static let maxTagLength = 10

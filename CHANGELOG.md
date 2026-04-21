@@ -2,6 +2,11 @@
 
 All notable changes to cmux are documented here.
 
+## [Unreleased]
+
+### Added
+- Add active pane focus border (paneAppearance.focusedBorderEnabled / paneAppearance.focusedBorderColor).
+
 ## [0.63.2] - 2026-04-06
 
 ### Added

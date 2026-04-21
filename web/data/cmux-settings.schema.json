@@ -323,6 +323,16 @@
         }
       }
     },
+    "paneAppearance": {
+      "title": "paneAppearance",
+      "description": "Appearance customization for individual panes.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "focusedBorderEnabled": { "type": "boolean", "default": false, "description": "Show a border around the focused pane." },
+        "focusedBorderColor": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#5AC8FA", "description": "Hex color for the focused pane border." }
+      }
+    },
     "sidebarAppearance": {
       "title": "sidebarAppearance",
       "description": "Sidebar tint settings from Settings > Sidebar Appearance.",

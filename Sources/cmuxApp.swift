@@ -505,6 +505,14 @@ struct cmuxApp: App {
                     Button("Menu Bar Extra Debug…") {
                         MenuBarExtraDebugWindowController.shared.show()
                     }
+                    Button(
+                        String(
+                            localized: "debug.menu.paneFocusBorder",
+                            defaultValue: "Pane Focus Border Debug…"
+                        )
+                    ) {
+                        PaneFocusBorderDebugWindowController.shared.show()
+                    }
                     Button("Settings/About Titlebar Debug…") {
                         SettingsAboutTitlebarDebugWindowController.shared.show()
                     }
@@ -1160,6 +1168,7 @@ struct cmuxApp: App {
         SidebarDebugWindowController.shared.show()
         BackgroundDebugWindowController.shared.show()
         MenuBarExtraDebugWindowController.shared.show()
+        PaneFocusBorderDebugWindowController.shared.show()
     }
 }
 
@@ -1174,6 +1183,7 @@ private let cmuxAuxiliaryWindowIdentifiers: Set<String> = [
     "cmux.sidebarDebug",
     "cmux.menubarDebug",
     "cmux.backgroundDebug",
+    "cmux.paneFocusBorderDebug",
 ]
 
 /// Returns whether the given window should handle the standard close shortcut
@@ -1810,6 +1820,14 @@ private struct DebugWindowControlsView: View {
                         Button("Menu Bar Extra Debug…") {
                             MenuBarExtraDebugWindowController.shared.show()
                         }
+                        Button(
+                            String(
+                                localized: "debug.menu.paneFocusBorder",
+                                defaultValue: "Pane Focus Border Debug…"
+                            )
+                        ) {
+                            PaneFocusBorderDebugWindowController.shared.show()
+                        }
                         Button("Open All Debug Windows") {
                             BrowserImportHintDebugWindowController.shared.show()
                             BrowserProfilePopoverDebugWindowController.shared.show()
@@ -1817,6 +1835,7 @@ private struct DebugWindowControlsView: View {
                             SidebarDebugWindowController.shared.show()
                             BackgroundDebugWindowController.shared.show()
                             MenuBarExtraDebugWindowController.shared.show()
+                            PaneFocusBorderDebugWindowController.shared.show()
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -3592,6 +3611,121 @@ private struct BackgroundDebugView: View {
     }
 }
 
+// MARK: - Pane Focus Border Debug Window
+
+private final class PaneFocusBorderDebugWindowController: NSWindowController, NSWindowDelegate {
+    static let shared = PaneFocusBorderDebugWindowController()
+
+    private init() {
+        let window = NSPanel(
+            contentRect: NSRect(x: 0, y: 0, width: 460, height: 460),
+            styleMask: [.titled, .closable, .utilityWindow],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Pane Focus Border Debug"
+        window.titleVisibility = .visible
+        window.titlebarAppearsTransparent = false
+        window.isMovableByWindowBackground = true
+        window.isReleasedWhenClosed = false
+        window.identifier = NSUserInterfaceItemIdentifier("cmux.paneFocusBorderDebug")
+        window.center()
+        window.contentView = NSHostingView(rootView: PaneFocusBorderDebugView())
+        AppDelegate.shared?.applyWindowDecorations(to: window)
+        super.init(window: window)
+        window.delegate = self
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func show() {
+        window?.center()
+        window?.makeKeyAndOrderFront(nil)
+    }
+}
+
+private struct PaneFocusBorderDebugView: View {
+    @AppStorage(PaneFocusBorderSettings.enabledKey)
+    private var focusedBorderEnabled: Bool = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.colorHexKey)
+    private var focusedBorderColorHex: String = PaneFocusBorderSettings.defaultColorHex
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Pane Focus Border")
+                    .font(.headline)
+
+                GroupBox("Controls") {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Toggle("Enable Focus Border", isOn: $focusedBorderEnabled)
+
+                        ColorPicker("Border Color", selection: borderColorBinding, supportsOpacity: false)
+                            .disabled(!focusedBorderEnabled)
+
+                        HStack(spacing: 12) {
+                            Button("Reset") {
+                                focusedBorderEnabled = PaneFocusBorderSettings.defaultEnabled
+                                focusedBorderColorHex = PaneFocusBorderSettings.defaultColorHex
+                            }
+                            Text(focusedBorderColorHex)
+                                .font(.system(.caption, design: .monospaced))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.top, 2)
+                }
+
+                GroupBox("Preview") {
+                    ZStack {
+                        Rectangle()
+                            .fill(Color.black)
+                        RoundedRectangle(
+                            cornerRadius: PanelOverlayRingMetrics.cornerRadius,
+                            style: .continuous
+                        )
+                        .inset(by: PanelOverlayRingMetrics.inset)
+                        .stroke(
+                            previewBorderColor,
+                            lineWidth: PanelOverlayRingMetrics.lineWidth
+                        )
+                        .opacity(focusedBorderEnabled ? 1 : 0)
+                    }
+                    .frame(width: 400, height: 240)
+                    .padding(.vertical, 6)
+                }
+
+                Text("Changes apply live to every pane using this border setting.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Spacer(minLength: 0)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+        }
+    }
+
+    private var previewBorderColor: Color {
+        Color(nsColor: NSColor(hex: focusedBorderColorHex) ?? PaneFocusBorderSettings.resolvedColor())
+    }
+
+    private var borderColorBinding: Binding<Color> {
+        Binding(
+            get: {
+                Color(nsColor: NSColor(hex: focusedBorderColorHex) ?? PaneFocusBorderSettings.resolvedColor())
+            },
+            set: { newColor in
+                let nsColor = NSColor(newColor)
+                focusedBorderColorHex = nsColor.hexString()
+            }
+        )
+    }
+}
+
 private struct AboutPropertyRow: View {
     private let label: String
     private let text: String
@@ -4423,6 +4557,8 @@ struct SettingsView: View {
     @AppStorage(NotificationBadgeSettings.dockBadgeEnabledKey) private var notificationDockBadgeEnabled = NotificationBadgeSettings.defaultDockBadgeEnabled
     @AppStorage(NotificationPaneRingSettings.enabledKey) private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
     @AppStorage(NotificationPaneFlashSettings.enabledKey) private var notificationPaneFlashEnabled = NotificationPaneFlashSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.enabledKey) private var focusedBorderEnabled = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.colorHexKey) private var focusedBorderColorHex = PaneFocusBorderSettings.defaultColorHex
     @AppStorage(MenuBarExtraSettings.showInMenuBarKey) private var showMenuBarExtra = MenuBarExtraSettings.defaultShowInMenuBar
     @AppStorage(QuitWarningSettings.warnBeforeQuitKey) private var warnBeforeQuitShortcut = QuitWarningSettings.defaultWarnBeforeQuit
     @AppStorage(CommandPaletteRenameSelectionSettings.selectAllOnFocusKey)
@@ -4601,6 +4737,21 @@ struct SettingsView: View {
             set: { newColor in
                 let nsColor = NSColor(newColor)
                 sidebarNotificationBadgeColorHex = nsColor.hexString()
+            }
+        )
+    }
+
+    private var focusedBorderColorBinding: Binding<Color> {
+        Binding(
+            get: {
+                if let nsColor = NSColor(hex: focusedBorderColorHex) {
+                    return Color(nsColor: nsColor)
+                }
+                return Color(nsColor: PaneFocusBorderSettings.resolvedColor())
+            },
+            set: { newColor in
+                let nsColor = NSColor(newColor)
+                focusedBorderColorHex = nsColor.hexString()
             }
         )
     }
@@ -5211,6 +5362,41 @@ struct SettingsView: View {
                                 .accessibilityLabel(
                                     String(localized: "settings.notifications.paneFlash.title", defaultValue: "Pane Flash")
                                 )
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.focusedBorderEnabled"),
+                            String(localized: "settings.paneAppearance.focusedBorder.title", defaultValue: "Active Pane Border"),
+                            subtitle: String(localized: "settings.paneAppearance.focusedBorder.subtitle", defaultValue: "Show a colored border around the focused pane.")
+                        ) {
+                            Toggle("", isOn: $focusedBorderEnabled)
+                                .labelsHidden()
+                                .controlSize(.small)
+                                .accessibilityLabel(
+                                    String(localized: "settings.paneAppearance.focusedBorder.title", defaultValue: "Active Pane Border")
+                                )
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.focusedBorderColor"),
+                            String(localized: "settings.paneAppearance.focusedBorderColor.title", defaultValue: "Border Color"),
+                            subtitle: String(localized: "settings.paneAppearance.focusedBorderColor.subtitle", defaultValue: "Color of the focused pane border.")
+                        ) {
+                            HStack(spacing: 6) {
+                                ColorPicker("", selection: focusedBorderColorBinding, supportsOpacity: false)
+                                    .labelsHidden()
+                                    .controlSize(.small)
+                                if focusedBorderColorHex != PaneFocusBorderSettings.defaultColorHex {
+                                    Button(String(localized: "settings.paneAppearance.focusedBorderColor.reset", defaultValue: "Reset")) {
+                                        focusedBorderColorHex = PaneFocusBorderSettings.defaultColorHex
+                                    }
+                                    .controlSize(.small)
+                                }
+                            }
                         }
 
                         SettingsCardDivider()
@@ -6589,6 +6775,8 @@ struct SettingsView: View {
         notificationDockBadgeEnabled = NotificationBadgeSettings.defaultDockBadgeEnabled
         notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
         notificationPaneFlashEnabled = NotificationPaneFlashSettings.defaultEnabled
+        focusedBorderEnabled = PaneFocusBorderSettings.defaultEnabled
+        focusedBorderColorHex = PaneFocusBorderSettings.defaultColorHex
         showMenuBarExtra = MenuBarExtraSettings.defaultShowInMenuBar
         warnBeforeQuitShortcut = QuitWarningSettings.defaultWarnBeforeQuit
         commandPaletteRenameSelectAllOnFocus = CommandPaletteRenameSelectionSettings.defaultSelectAllOnFocus
