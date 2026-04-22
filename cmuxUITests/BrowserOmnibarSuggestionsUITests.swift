@@ -570,7 +570,7 @@ final class BrowserOmnibarSuggestionsUITests: XCTestCase {
             return
         }
 
-        let bundleId = "com.cmuxterm.app.debug"
+        let bundleId = "com.cmuxplus.app.debug"
         let dir = appSupport.appendingPathComponent(bundleId, isDirectory: true)
         let url = dir.appendingPathComponent("browser_history.json", isDirectory: false)
         do {

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CMUX+ Core"
+  short_description: "Control windows/workspaces/panes/surfaces and routing with CMUX+ CLI."
+  default_prompt: "Use this skill to inspect and manipulate CMUX+ topology: identify context, target handles, create/focus/move/reorder windows/workspaces/panes/surfaces, and use trigger-flash for visual confirmation."

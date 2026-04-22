@@ -387,7 +387,7 @@ struct cmuxApp: App {
             }
 
             CommandGroup(replacing: .appInfo) {
-                Button(String(localized: "menu.app.about", defaultValue: "About cmux")) {
+                Button(String(localized: "menu.app.about", defaultValue: "About CMUX+")) {
                     showAboutPanel()
                 }
                 Button(String(localized: "menu.app.checkForUpdates", defaultValue: "Check for Updates…")) {
@@ -397,7 +397,7 @@ struct cmuxApp: App {
             }
 
             CommandGroup(replacing: .appTermination) {
-                splitCommandButton(title: String(localized: "menu.quitCmux", defaultValue: "Quit cmux"), shortcut: menuShortcut(for: .quit)) {
+                splitCommandButton(title: String(localized: "menu.quitCmux", defaultValue: "Quit CMUX+"), shortcut: menuShortcut(for: .quit)) {
                     NSApp.terminate(nil)
                 }
             }
@@ -1234,7 +1234,7 @@ private enum SettingsAboutWindowKind: String, CaseIterable, Identifiable {
         case .settings:
             return "Settings"
         case .about:
-            return "About cmux"
+            return "About CMUX+"
         }
     }
 
@@ -1347,7 +1347,7 @@ private struct SettingsAboutTitlebarDebugOptions: Equatable {
         case .about:
             return SettingsAboutTitlebarDebugOptions(
                 overridesEnabled: false,
-                windowTitle: "About cmux",
+                windowTitle: "About CMUX+",
                 titleVisibility: .hidden,
                 titlebarAppearsTransparent: true,
                 movableByWindowBackground: false,
@@ -2841,7 +2841,7 @@ private final class SidebarDebugWindowController: NSWindowController, NSWindowDe
 private struct AboutPanelView: View {
     @Environment(\.openURL) private var openURL
 
-    private let githubURL = URL(string: "https://github.com/manaflow-ai/cmux")
+    private let githubURL = URL(string: "https://github.com/tamekuniz/CMUX-Plus")
     private let docsURL = URL(string: "https://cmux.com/docs")
 
     private var version: String? { Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String }
@@ -2865,7 +2865,7 @@ private struct AboutPanelView: View {
 
             VStack(alignment: .center, spacing: 32) {
                 VStack(alignment: .center, spacing: 8) {
-                    Text(String(localized: "about.appName", defaultValue: "cmux"))
+                    Text(String(localized: "about.appName", defaultValue: "CMUX+"))
                         .bold()
                         .font(.title)
                     Text(String(localized: "about.description", defaultValue: "A Ghostty-based terminal with vertical tabs\nand a notification panel for macOS."))
@@ -2886,7 +2886,7 @@ private struct AboutPanelView: View {
                     }
                     let commitText = commit ?? "—"
                     let commitURL = commit.flatMap { hash in
-                        URL(string: "https://github.com/manaflow-ai/cmux/commit/\(hash)")
+                        URL(string: "https://github.com/tamekuniz/CMUX-Plus/commit/\(hash)")
                     }
                     AboutPropertyRow(label: String(localized: "about.commit", defaultValue: "Commit"), text: commitText, url: commitURL)
                 }
@@ -3967,7 +3967,7 @@ enum AppIconLaunchState {
 enum AppIconSettings {
     static let modeKey = "appIconMode"
     static let defaultMode: AppIconMode = .automatic
-    private static let dockTileIconDidChangeNotification = Notification.Name("com.cmuxterm.appIconDidChange")
+    private static let dockTileIconDidChangeNotification = Notification.Name("com.cmuxplus.appIconDidChange")
     private static var liveEnvironmentProvider: () -> Environment = { .live() }
 
     private static func isRunningUnderXCTest(_ env: [String: String] = ProcessInfo.processInfo.environment) -> Bool {
@@ -4691,12 +4691,12 @@ struct SettingsView: View {
         if paneFirstClickFocusEnabled {
             return String(
                 localized: "settings.app.paneFirstClickFocus.subtitleOn",
-                defaultValue: "When cmux is inactive, clicking a pane activates the window and focuses that pane in one click."
+                defaultValue: "When CMUX+ is inactive, clicking a pane activates the window and focuses that pane in one click."
             )
         }
         return String(
             localized: "settings.app.paneFirstClickFocus.subtitleOff",
-            defaultValue: "When cmux is inactive, the first click only activates the window. Click again to focus the pane."
+            defaultValue: "When CMUX+ is inactive, the first click only activates the window. Click again to focus the pane."
         )
     }
 
@@ -5155,7 +5155,7 @@ struct SettingsView: View {
                             configurationReview: .json("app.language"),
                             String(localized: "settings.app.language", defaultValue: "Language"),
                             subtitle: appLanguage != LanguageSettings.languageAtLaunch.rawValue
-                                ? String(localized: "settings.app.language.restartSubtitle", defaultValue: "Restart cmux to apply")
+                                ? String(localized: "settings.app.language.restartSubtitle", defaultValue: "Restart CMUX+ to apply")
                                 : nil,
                             controlWidth: pickerColumnWidth
                         ) {
@@ -5281,7 +5281,7 @@ struct SettingsView: View {
                             String(localized: "settings.app.configWindow", defaultValue: "Terminal Config"),
                             subtitle: String(
                                 localized: "settings.app.configWindow.subtitle",
-                                defaultValue: "Open the cmux config, standalone Ghostty config, and merged preview in one utility window."
+                                defaultValue: "Open the CMUX+ config, standalone Ghostty config, and merged preview in one utility window."
                             )
                         ) {
                             Button(String(localized: "settings.app.configWindow.openButton", defaultValue: "Open Config Window")) {
@@ -5295,14 +5295,14 @@ struct SettingsView: View {
 
                         SettingsCardRow(
                             configurationReview: .json("app.openMarkdownInCmuxViewer"),
-                            String(localized: "settings.app.openMarkdownInCmuxViewer", defaultValue: "Open Markdown in cmux Viewer"),
-                            subtitle: String(localized: "settings.app.openMarkdownInCmuxViewer.subtitle", defaultValue: "Cmd-clicking .md/.markdown/.mkd/.mdx files opens the cmux markdown viewer panel instead of the preferred editor.")
+                            String(localized: "settings.app.openMarkdownInCmuxViewer", defaultValue: "Open Markdown in CMUX+ Viewer"),
+                            subtitle: String(localized: "settings.app.openMarkdownInCmuxViewer.subtitle", defaultValue: "Cmd-clicking .md/.markdown/.mkd/.mdx files opens the CMUX+ markdown viewer panel instead of the preferred editor.")
                         ) {
                             Toggle("", isOn: $openMarkdownInCmuxViewer)
                                 .labelsHidden()
                                 .controlSize(.small)
                                 .accessibilityLabel(
-                                    String(localized: "settings.app.openMarkdownInCmuxViewer", defaultValue: "Open Markdown in cmux Viewer")
+                                    String(localized: "settings.app.openMarkdownInCmuxViewer", defaultValue: "Open Markdown in CMUX+ Viewer")
                                 )
                         }
 
@@ -5335,7 +5335,7 @@ struct SettingsView: View {
                         SettingsCardRow(
                             configurationReview: .json("notifications.showInMenuBar"),
                             String(localized: "settings.app.showInMenuBar", defaultValue: "Show in Menu Bar"),
-                            subtitle: String(localized: "settings.app.showInMenuBar.subtitle", defaultValue: "Keep cmux in the menu bar for unread notifications and quick actions.")
+                            subtitle: String(localized: "settings.app.showInMenuBar.subtitle", defaultValue: "Keep CMUX+ in the menu bar for unread notifications and quick actions.")
                         ) {
                             Toggle("", isOn: $showMenuBarExtra)
                                 .labelsHidden()
@@ -5365,7 +5365,7 @@ struct SettingsView: View {
                         SettingsCardRow(
                             configurationReview: .json("notifications.paneFlash"),
                             String(localized: "settings.notifications.paneFlash.title", defaultValue: "Pane Flash"),
-                            subtitle: String(localized: "settings.notifications.paneFlash.subtitle", defaultValue: "Briefly flash a blue outline when cmux highlights a pane.")
+                            subtitle: String(localized: "settings.notifications.paneFlash.subtitle", defaultValue: "Briefly flash a blue outline when CMUX+ highlights a pane.")
                         ) {
                             Toggle("", isOn: $notificationPaneFlashEnabled)
                                 .labelsHidden()
@@ -5523,7 +5523,7 @@ struct SettingsView: View {
                             String(localized: "settings.app.telemetry", defaultValue: "Send anonymous telemetry"),
                             subtitle: sendAnonymousTelemetry != telemetryValueAtLaunch
                                 ? String(localized: "settings.app.telemetry.subtitleChanged", defaultValue: "Change takes effect on next launch.")
-                                : String(localized: "settings.app.telemetry.subtitle", defaultValue: "Share anonymized crash and usage data to help improve cmux.")
+                                : String(localized: "settings.app.telemetry.subtitle", defaultValue: "Share anonymized crash and usage data to help improve CMUX+.")
                         ) {
                             Toggle("", isOn: $sendAnonymousTelemetry)
                                 .labelsHidden()
@@ -5649,9 +5649,9 @@ struct SettingsView: View {
 
                         SettingsCardRow(
                             configurationReview: .json("sidebar.openPullRequestLinksInCmuxBrowser"),
-                            String(localized: "settings.app.openSidebarPRLinks", defaultValue: "Open Sidebar PR Links in cmux Browser"),
+                            String(localized: "settings.app.openSidebarPRLinks", defaultValue: "Open Sidebar PR Links in CMUX+ Browser"),
                             subtitle: openSidebarPullRequestLinksInCmuxBrowser
-                                ? String(localized: "settings.app.openSidebarPRLinks.subtitleOn", defaultValue: "Clicks open inside cmux browser.")
+                                ? String(localized: "settings.app.openSidebarPRLinks.subtitleOn", defaultValue: "Clicks open inside CMUX+ browser.")
                                 : String(localized: "settings.app.openSidebarPRLinks.subtitleOff", defaultValue: "Clicks open in your default browser.")
                         ) {
                             Toggle("", isOn: $openSidebarPullRequestLinksInCmuxBrowser)
@@ -5664,9 +5664,9 @@ struct SettingsView: View {
 
                         SettingsCardRow(
                             configurationReview: .json("sidebar.openPortLinksInCmuxBrowser"),
-                            String(localized: "settings.app.openSidebarPortLinks", defaultValue: "Open Sidebar Port Links in cmux Browser"),
+                            String(localized: "settings.app.openSidebarPortLinks", defaultValue: "Open Sidebar Port Links in CMUX+ Browser"),
                             subtitle: openSidebarPortLinksInCmuxBrowser
-                                ? String(localized: "settings.app.openSidebarPortLinks.subtitleOn", defaultValue: "Port clicks open inside cmux browser.")
+                                ? String(localized: "settings.app.openSidebarPortLinks.subtitleOn", defaultValue: "Port clicks open inside CMUX+ browser.")
                                 : String(localized: "settings.app.openSidebarPortLinks.subtitleOff", defaultValue: "Port clicks open in your default browser.")
                         ) {
                             Toggle("", isOn: $openSidebarPortLinksInCmuxBrowser)
@@ -5746,7 +5746,7 @@ struct SettingsView: View {
                             configurationReview: .json("terminal.showScrollBar"),
                             String(localized: "settings.terminal.scrollBar", defaultValue: "Show Terminal Scroll Bar"),
                             subtitle: showTerminalScrollBar
-                                ? String(localized: "settings.terminal.scrollBar.subtitleOn", defaultValue: "Shows the right-edge terminal scroll bar in shell scrollback. cmux hides it automatically for alternate-screen style TUI surfaces and you can also disable it per workspace.")
+                                ? String(localized: "settings.terminal.scrollBar.subtitleOn", defaultValue: "Shows the right-edge terminal scroll bar in shell scrollback. CMUX+ hides it automatically for alternate-screen style TUI surfaces and you can also disable it per workspace.")
                                 : String(localized: "settings.terminal.scrollBar.subtitleOff", defaultValue: "Hides the right-edge terminal scroll bar everywhere. Changes apply immediately and persist across relaunches.")
                         ) {
                             Toggle("", isOn: showTerminalScrollBarBinding)
@@ -6074,7 +6074,7 @@ struct SettingsView: View {
                             String(localized: "settings.automation.claudeCode", defaultValue: "Claude Code Integration"),
                             subtitle: claudeCodeHooksEnabled
                                 ? String(localized: "settings.automation.claudeCode.subtitleOn", defaultValue: "Sidebar shows Claude session status and notifications.")
-                                : String(localized: "settings.automation.claudeCode.subtitleOff", defaultValue: "Claude Code runs without cmux integration.")
+                                : String(localized: "settings.automation.claudeCode.subtitleOff", defaultValue: "Claude Code runs without CMUX+ integration.")
                         ) {
                             Toggle("", isOn: $claudeCodeHooksEnabled)
                                 .labelsHidden()
@@ -6084,7 +6084,7 @@ struct SettingsView: View {
 
                         SettingsCardDivider()
 
-                        SettingsCardNote(String(localized: "settings.automation.claudeCode.note", defaultValue: "When enabled, cmux wraps the claude command to inject session tracking and notification hooks. Disable if you prefer to manage Claude Code hooks yourself."))
+                        SettingsCardNote(String(localized: "settings.automation.claudeCode.note", defaultValue: "When enabled, CMUX+ wraps the claude command to inject session tracking and notification hooks. Disable if you prefer to manage Claude Code hooks yourself."))
                     }
 
                     SettingsCard {
@@ -6108,7 +6108,7 @@ struct SettingsView: View {
                             String(localized: "settings.automation.cursor", defaultValue: "Cursor Integration"),
                             subtitle: cursorHooksEnabled
                                 ? String(localized: "settings.automation.cursor.subtitleOn", defaultValue: "Sidebar shows Cursor agent status and notifications.")
-                                : String(localized: "settings.automation.cursor.subtitleOff", defaultValue: "Cursor runs without cmux integration.")
+                                : String(localized: "settings.automation.cursor.subtitleOff", defaultValue: "Cursor runs without CMUX+ integration.")
                         ) {
                             Toggle("", isOn: $cursorHooksEnabled)
                                 .labelsHidden()
@@ -6118,7 +6118,7 @@ struct SettingsView: View {
 
                         SettingsCardDivider()
 
-                        SettingsCardNote(String(localized: "settings.automation.cursor.note", defaultValue: "Hooks must be installed with `cmux cursor install-hooks`. They no-op outside cmux terminals."))
+                        SettingsCardNote(String(localized: "settings.automation.cursor.note", defaultValue: "Hooks must be installed with `cmuxplus cursor install-hooks`. They no-op outside CMUX+ terminals."))
                     }
 
                     SettingsCard {
@@ -6127,7 +6127,7 @@ struct SettingsView: View {
                             String(localized: "settings.automation.gemini", defaultValue: "Gemini CLI Integration"),
                             subtitle: geminiHooksEnabled
                                 ? String(localized: "settings.automation.gemini.subtitleOn", defaultValue: "Sidebar shows Gemini session status and notifications.")
-                                : String(localized: "settings.automation.gemini.subtitleOff", defaultValue: "Gemini runs without cmux integration.")
+                                : String(localized: "settings.automation.gemini.subtitleOff", defaultValue: "Gemini runs without CMUX+ integration.")
                         ) {
                             Toggle("", isOn: $geminiHooksEnabled)
                                 .labelsHidden()
@@ -6137,7 +6137,7 @@ struct SettingsView: View {
 
                         SettingsCardDivider()
 
-                        SettingsCardNote(String(localized: "settings.automation.gemini.note", defaultValue: "Hooks must be installed with `cmux gemini install-hooks`. They no-op outside cmux terminals."))
+                        SettingsCardNote(String(localized: "settings.automation.gemini.note", defaultValue: "Hooks must be installed with `cmuxplus gemini install-hooks`. They no-op outside CMUX+ terminals."))
                     }
 
                     SettingsCard {
@@ -6237,7 +6237,7 @@ struct SettingsView: View {
 
                         SettingsCardRow(
                             configurationReview: .json("browser.openTerminalLinksInCmuxBrowser"),
-                            String(localized: "settings.browser.openTerminalLinks", defaultValue: "Open Terminal Links in cmux Browser"),
+                            String(localized: "settings.browser.openTerminalLinks", defaultValue: "Open Terminal Links in CMUX+ Browser"),
                             subtitle: String(localized: "settings.browser.openTerminalLinks.subtitle", defaultValue: "When off, links clicked in terminal output open in your default browser.")
                         ) {
                             Toggle("", isOn: $openTerminalLinksInCmuxBrowser)
@@ -6264,7 +6264,7 @@ struct SettingsView: View {
                                 SettingsCardRow(
                                     configurationReview: .json("browser.hostsToOpenInEmbeddedBrowser"),
                                     String(localized: "settings.browser.hostWhitelist", defaultValue: "Hosts to Open in Embedded Browser"),
-                                    subtitle: String(localized: "settings.browser.hostWhitelist.subtitle", defaultValue: "Applies to terminal link clicks and intercepted `open https://...` calls. Only these hosts open in cmux. Others open in your default browser. One host or wildcard per line (for example: example.com, *.internal.example). Leave empty to open all hosts in cmux.")
+                                    subtitle: String(localized: "settings.browser.hostWhitelist.subtitle", defaultValue: "Applies to terminal link clicks and intercepted `open https://...` calls. Only these hosts open in CMUX+. Others open in your default browser. One host or wildcard per line (for example: example.com, *.internal.example). Leave empty to open all hosts in CMUX+.")
                                 ) {
                                     EmptyView()
                                 }
@@ -6317,7 +6317,7 @@ struct SettingsView: View {
                             Text(String(localized: "settings.browser.httpAllowlist", defaultValue: "HTTP Hosts Allowed in Embedded Browser"))
                                 .font(.system(size: 13, weight: .semibold))
 
-                            Text(String(localized: "settings.browser.httpAllowlist.description", defaultValue: "Controls which HTTP (non-HTTPS) hosts can open in cmux without a warning prompt. Defaults include localhost, 127.0.0.1, ::1, 0.0.0.0, and *.localtest.me."))
+                            Text(String(localized: "settings.browser.httpAllowlist.description", defaultValue: "Controls which HTTP (non-HTTPS) hosts can open in CMUX+ without a warning prompt. Defaults include localhost, 127.0.0.1, ::1, 0.0.0.0, and *.localtest.me."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
 
@@ -6981,7 +6981,7 @@ private struct AuthSettingsRow: View {
         }
         return String(
             localized: "settings.account.signedOut.subtitle",
-            defaultValue: "Sign in with your cmux account to enable sync across devices."
+            defaultValue: "Sign in with your CMUX+ account to enable sync across devices."
         )
     }
 
@@ -7572,12 +7572,12 @@ private struct GlobalHotkeySection: View {
         if isEnabled {
             return String(
                 localized: "settings.globalHotkey.enable.subtitleOn",
-                defaultValue: "Press the shortcut from any app to show or hide all cmux windows."
+                defaultValue: "Press the shortcut from any app to show or hide all CMUX+ windows."
             )
         }
         return String(
             localized: "settings.globalHotkey.enable.subtitleOff",
-            defaultValue: "Turn this on to show or hide all cmux windows from any app."
+            defaultValue: "Turn this on to show or hide all CMUX+ windows from any app."
         )
     }
 

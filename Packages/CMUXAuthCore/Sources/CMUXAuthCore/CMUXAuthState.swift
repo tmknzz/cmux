@@ -41,7 +41,7 @@ public enum CMUXAuthLaunchConfig {
         }
         return CMUXAuthUser(
             id: environment["CMUX_UITEST_AUTH_USER_ID"] ?? "uitest_user",
-            primaryEmail: environment["CMUX_UITEST_AUTH_EMAIL"] ?? "uitest@cmux.local",
+            primaryEmail: environment["CMUX_UITEST_AUTH_EMAIL"] ?? "uitest@cmuxplus.local",
             displayName: environment["CMUX_UITEST_AUTH_NAME"] ?? "UI Test"
         )
     }

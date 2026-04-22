@@ -32,22 +32,22 @@ export const changelogMedia: Record<string, VersionMedia> = {
       {
         title: "SSH",
         description:
-          "cmux ssh user@remote creates a workspace for a remote machine. Browser panes route through the remote network so localhost just works. Drag an image into a remote session to upload via scp. Coding agent notifications come home to your local sidebar. Reconnects on drops.",
+          "cmuxplus ssh user@remote creates a workspace for a remote machine. Browser panes route through the remote network so localhost just works. Drag an image into a remote session to upload via scp. Coding agent notifications come home to your local sidebar. Reconnects on drops.",
       },
       {
         title: "Claude Code Teams",
         description:
-          "cmux claude-teams launches Claude Code's experimental teammate mode with one command. It sets up the environment, fakes a tmux session, and translates tmux commands into native cmux splits. Teammates stack vertically in a right column with sidebar metadata and notifications.",
+          "cmuxplus claude-teams launches Claude Code's experimental teammate mode with one command. It sets up the environment, fakes a tmux session, and translates tmux commands into native CMUX+ splits. Teammates stack vertically in a right column with sidebar metadata and notifications.",
       },
       {
         title: "oh-my-openagent",
         description:
-          "cmux omo integrates oh-my-openagent (formerly oh-my-opencode), which orchestrates specialist agents across Claude, GPT, and Gemini in parallel. Same tmux shim as claude-teams, auto-installs the plugin, notifications route through cmux.",
+          "cmuxplus omo integrates oh-my-openagent (formerly oh-my-opencode), which orchestrates specialist agents across Claude, GPT, and Gemini in parallel. Same tmux shim as claude-teams, auto-installs the plugin, notifications route through CMUX+.",
       },
       {
         title: "Browser Profile Import",
         description:
-          "Import cookies, history, and sessions from Chrome, Arc, Brave, Firefox, Safari, and 20+ browsers. The import wizard detects installed browsers, lets you pick profiles, and injects everything into cmux's browser panes so you're already logged in.",
+          "Import cookies, history, and sessions from Chrome, Arc, Brave, Firefox, Safari, and 20+ browsers. The import wizard detects installed browsers, lets you pick profiles, and injects everything into CMUX+'s browser panes so you're already logged in.",
       },
       {
         title: "Minimal Mode",
@@ -72,7 +72,7 @@ export const changelogMedia: Record<string, VersionMedia> = {
       {
         title: "Find in Browser",
         description:
-          "Browser panels now support Cmd+F with inline find controls, so you can search long docs, dashboards, and issue threads without leaving cmux.",
+          "Browser panels now support Cmd+F with inline find controls, so you can search long docs, dashboards, and issue threads without leaving CMUX+.",
       },
       {
         title: "Vi Copy Mode",
@@ -87,7 +87,7 @@ export const changelogMedia: Record<string, VersionMedia> = {
       {
         title: "Expanded Localization",
         description:
-          "cmux now includes Japanese plus 16 additional languages, and a per-app language override lets you change the UI language without changing macOS system settings.",
+          "CMUX+ now includes Japanese plus 16 additional languages, and a per-app language override lets you change the UI language without changing macOS system settings.",
       },
     ],
   },
@@ -103,7 +103,7 @@ export const changelogMedia: Record<string, VersionMedia> = {
       {
         title: "Command Palette",
         description:
-          "Hit Cmd+Shift+P to open a searchable command palette. Every action in cmux is here: creating workspaces, toggling the sidebar, checking for updates, switching windows. Keyboard shortcuts are shown inline so you can learn them as you go.",
+          "Hit Cmd+Shift+P to open a searchable command palette. Every action in CMUX+ is here: creating workspaces, toggling the sidebar, checking for updates, switching windows. Keyboard shortcuts are shown inline so you can learn them as you go.",
         image: "/changelog/0.61.0-command-palette.png",
       },
       {
@@ -138,7 +138,7 @@ export const changelogMedia: Record<string, VersionMedia> = {
       {
         title: "Browser DevTools",
         description:
-          "The embedded browser now has full WebKit DevTools. Open them with the standard shortcut and they persist across tab switches. Inspect elements, debug JavaScript, and monitor network requests without leaving cmux.",
+          "The embedded browser now has full WebKit DevTools. Open them with the standard shortcut and they persist across tab switches. Inspect elements, debug JavaScript, and monitor network requests without leaving CMUX+.",
         image: "/changelog/0.60.0-devtools.png",
       },
       {

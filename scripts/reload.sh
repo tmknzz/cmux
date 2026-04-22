@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="cmux DEV"
-BUNDLE_ID="com.cmuxterm.app.debug"
-BASE_APP_NAME="cmux DEV"
+APP_NAME="cmuxplus DEV"
+BUNDLE_ID="com.cmuxplus.app.debug"
+BASE_APP_NAME="cmuxplus DEV"
 DERIVED_DATA=""
 NAME_SET=0
 BUNDLE_SET=0
@@ -12,7 +12,7 @@ TAG=""
 LAUNCH=0
 CMUX_DEBUG_LOG=""
 CLI_PATH=""
-LAST_SOCKET_PATH_DIR="$HOME/Library/Application Support/cmux"
+LAST_SOCKET_PATH_DIR="$HOME/Library/Application Support/cmuxplus"
 LAST_SOCKET_PATH_FILE="${LAST_SOCKET_PATH_DIR}/last-socket-path"
 AUTO_SKIP_ZIG_BUILD_REASON=""
 
@@ -65,7 +65,7 @@ EOF
 }
 
 select_cmux_shim_target() {
-  local app_cli_dir="/Applications/cmux.app/Contents/Resources/bin"
+  local app_cli_dir="/Applications/cmuxplus.app/Contents/Resources/bin"
   local marker="cmux dev shim (managed by scripts/reload.sh)"
   local target=""
   local path_entry=""
@@ -209,17 +209,17 @@ print_tag_cleanup_reminder() {
     done
     echo "Cleanup stale tags only:"
     for tag in "${stale_tags[@]}"; do
-      echo "  pkill -f \"CMUX\\\\+ ${tag}.app/Contents/MacOS/cmux DEV\""
+      echo "  pkill -f \"CMUX\\\\+ ${tag}.app/Contents/MacOS/cmuxplus DEV\""
       echo "  rm -rf \"$(tagged_derived_data_path "$tag")\" \"/tmp/cmux-${tag}\" \"/tmp/cmux-debug-${tag}.sock\""
       echo "  rm -f \"/tmp/cmux-debug-${tag}.log\""
-      echo "  rm -f \"$HOME/Library/Application Support/cmux/cmuxd-dev-${tag}.sock\""
+      echo "  rm -f \"$HOME/Library/Application Support/cmuxplus/cmuxd-dev-${tag}.sock\""
     done
   fi
   echo "After you verify current tag, cleanup command:"
-  echo "  pkill -f \"CMUX\\\\+ ${current_slug}.app/Contents/MacOS/cmux DEV\""
+  echo "  pkill -f \"CMUX\\\\+ ${current_slug}.app/Contents/MacOS/cmuxplus DEV\""
   echo "  rm -rf \"$(tagged_derived_data_path "$current_slug")\" \"/tmp/cmux-${current_slug}\" \"/tmp/cmux-debug-${current_slug}.sock\""
   echo "  rm -f \"/tmp/cmux-debug-${current_slug}.log\""
-  echo "  rm -f \"$HOME/Library/Application Support/cmux/cmuxd-dev-${current_slug}.sock\""
+  echo "  rm -f \"$HOME/Library/Application Support/cmuxplus/cmuxd-dev-${current_slug}.sock\""
 }
 
 while [[ $# -gt 0 ]]; do
@@ -297,7 +297,7 @@ if [[ -n "$TAG" ]]; then
     APP_NAME="CMUX+ ${TAG}"
   fi
   if [[ "$BUNDLE_SET" -eq 0 ]]; then
-    BUNDLE_ID="com.cmuxterm.app.debug.${TAG_ID}"
+    BUNDLE_ID="com.cmuxplus.app.debug.${TAG_ID}"
   fi
   if [[ "$DERIVED_SET" -eq 0 ]]; then
     DERIVED_DATA="$(tagged_derived_data_path "$TAG_SLUG")"
@@ -440,7 +440,7 @@ if [[ -n "$TAG" && "$APP_NAME" != "$SEARCH_APP_NAME" ]]; then
     /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "$INFO_PLIST" 2>/dev/null \
       || /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $BUNDLE_ID" "$INFO_PLIST"
     if [[ -n "${TAG_SLUG:-}" ]]; then
-      APP_SUPPORT_DIR="$HOME/Library/Application Support/cmux"
+      APP_SUPPORT_DIR="$HOME/Library/Application Support/cmuxplus"
       CMUXD_SOCKET="${APP_SUPPORT_DIR}/cmuxd-dev-${TAG_SLUG}.sock"
       CMUX_SOCKET="/tmp/cmux-debug-${TAG_SLUG}.sock"
       CMUX_DEBUG_LOG="/tmp/cmux-debug-${TAG_SLUG}.log"
@@ -475,18 +475,18 @@ if [[ -n "$TAG" && "$APP_NAME" != "$SEARCH_APP_NAME" ]]; then
   APP_PATH="$TAG_APP_PATH"
 fi
 
-CLI_PATH="$(dirname "$APP_PATH")/cmux"
+CLI_PATH="$(dirname "$APP_PATH")/cmuxplus"
 if [[ -x "$CLI_PATH" ]]; then
   (umask 077; printf '%s\n' "$CLI_PATH" > /tmp/cmux-last-cli-path) || true
   ln -sfn "$CLI_PATH" /tmp/cmux-cli || true
 
   # Stable shim that always follows the last reload-selected dev CLI.
-  DEV_CLI_SHIM="$HOME/.local/bin/cmux-dev"
-  write_dev_cli_shim "$DEV_CLI_SHIM" "/Applications/cmux.app/Contents/Resources/bin/cmux"
+  DEV_CLI_SHIM="$HOME/.local/bin/cmuxplus-dev"
+  write_dev_cli_shim "$DEV_CLI_SHIM" "/Applications/cmuxplus.app/Contents/Resources/bin/cmuxplus"
 
   CMUX_SHIM_TARGET="$(select_cmux_shim_target || true)"
   if [[ -n "${CMUX_SHIM_TARGET:-}" ]]; then
-    write_dev_cli_shim "$CMUX_SHIM_TARGET" "/Applications/cmux.app/Contents/Resources/bin/cmux"
+    write_dev_cli_shim "$CMUX_SHIM_TARGET" "/Applications/cmuxplus.app/Contents/Resources/bin/cmuxplus"
   fi
 fi
 
@@ -523,7 +523,7 @@ if ! /usr/bin/codesign --force --sign - --timestamp=none --generate-entitlement-
     exit 1
   fi
 fi
-CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
+CLI_PATH="$APP_PATH/Contents/Resources/bin/cmuxplus"
 if [[ -x "$CLI_PATH" ]]; then
   echo "$CLI_PATH" > /tmp/cmux-last-cli-path || true
 fi
@@ -620,7 +620,7 @@ if [[ -x "${CLI_PATH:-}" ]]; then
   echo "  $CLI_PATH"
   echo "CLI helpers:"
   echo "  /tmp/cmux-cli ..."
-  echo "  $HOME/.local/bin/cmux-dev ..."
+  echo "  $HOME/.local/bin/cmuxplus-dev ..."
   if [[ -n "${CMUX_SHIM_TARGET:-}" ]]; then
     echo "  $CMUX_SHIM_TARGET ..."
   fi

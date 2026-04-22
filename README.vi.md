@@ -1,9 +1,9 @@
-<h1 align="center">cmux</h1>
+<h1 align="center">CMUX+</h1>
 <p align="center">Một terminal macOS dựa trên Ghostty với tab dọc và thông báo cho các agent lập trình AI</p>
 
 <p align="center">
-  <a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-    <img src="./docs/assets/macos-badge.png" alt="Tải cmux cho macOS" width="180" />
+  <a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+    <img src="./docs/assets/macos-badge.png" alt="Tải CMUX+ cho macOS" width="180" />
   </a>
 </p>
 
@@ -14,15 +14,15 @@
 <p align="center">
   <a href="https://x.com/manaflowai"><img src="https://img.shields.io/badge/@manaflow-555?logo=x" alt="X / Twitter" /></a>
   <a href="https://discord.gg/xsgFEVrWCZ"><img src="https://img.shields.io/badge/Discord-555?logo=discord" alt="Discord" /></a>
-  <a href="https://github.com/manaflow-ai/cmux"><img src="https://img.shields.io/github/stars/manaflow-ai/cmux?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
+  <a href="https://github.com/tamekuniz/CMUX-Plus"><img src="https://img.shields.io/github/stars/tamekuniz/CMUX-Plus?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
 </p>
 
 <p align="center">
-  <img src="./docs/assets/main-first-image.png" alt="Ảnh chụp màn hình cmux" width="900" />
+  <img src="./docs/assets/main-first-image.png" alt="Ảnh chụp màn hình CMUX+" width="900" />
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ Video demo</a> · <a href="https://cmux.com/blog/zen-of-cmux">Thiền của cmux</a>
+  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ Video demo</a> · <a href="https://cmux.com/blog/zen-of-cmux">Thiền của CMUX+</a>
 </p>
 
 ## Tính năng
@@ -67,16 +67,16 @@ Sidebar hiển thị nhánh git, trạng thái/số PR liên kết, thư mục l
 <tr>
 <td width="40%" valign="middle">
 <h3>SSH</h3>
-<code>cmux ssh user@remote</code> tạo workspace cho máy từ xa. Các pane trình duyệt định tuyến qua mạng từ xa nên localhost hoạt động bình thường. Kéo ảnh vào phiên từ xa để upload qua scp.
+<code>cmuxplus ssh user@remote</code> tạo workspace cho máy từ xa. Các pane trình duyệt định tuyến qua mạng từ xa nên localhost hoạt động bình thường. Kéo ảnh vào phiên từ xa để upload qua scp.
 </td>
 <td width="60%">
-<img src="./docs/assets/ssh.png" alt="cmux SSH" width="100%" />
+<img src="./docs/assets/ssh.png" alt="CMUX+ SSH" width="100%" />
 </td>
 </tr>
 <tr>
 <td width="40%" valign="middle">
 <h3>Claude Code Teams</h3>
-<code>cmux claude-teams</code> chạy chế độ teammate của Claude Code chỉ với một lệnh. Các teammate sinh ra dưới dạng split gốc với metadata sidebar và thông báo. Không cần tmux.
+<code>cmuxplus claude-teams</code> chạy chế độ teammate của Claude Code chỉ với một lệnh. Các teammate sinh ra dưới dạng split gốc với metadata sidebar và thông báo. Không cần tmux.
 </td>
 <td width="60%">
 <img src="./docs/assets/claude-code-teams.png" alt="Claude Code Teams" width="100%" />
@@ -95,44 +95,44 @@ Sidebar hiển thị nhánh git, trạng thái/số PR liên kết, thư mục l
 
 ### DMG (khuyến nghị)
 
-<a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-  <img src="./docs/assets/macos-badge.png" alt="Tải cmux cho macOS" width="180" />
+<a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+  <img src="./docs/assets/macos-badge.png" alt="Tải CMUX+ cho macOS" width="180" />
 </a>
 
-Mở file `.dmg` và kéo cmux vào thư mục Applications. cmux tự cập nhật qua Sparkle, nên bạn chỉ cần tải một lần.
+Mở file `.dmg` và kéo CMUX+ vào thư mục Applications. CMUX+ tự cập nhật qua Sparkle, nên bạn chỉ cần tải một lần.
 
 ### Homebrew
 
 ```bash
-brew tap manaflow-ai/cmux
-brew install --cask cmux
+brew tap tamekuniz/cmuxplus
+brew install --cask tamekuniz/cmuxplus/cmuxplus
 ```
 
 Cập nhật sau này:
 
 ```bash
-brew upgrade --cask cmux
+brew upgrade --cask cmuxplus
 ```
 
 Lần mở đầu tiên, macOS có thể yêu cầu bạn xác nhận mở app từ nhà phát triển được xác định. Nhấn **Open** để tiếp tục.
 
-## Vì sao cmux?
+## Vì sao CMUX+?
 
 Tôi chạy rất nhiều phiên Claude Code và Codex song song. Tôi từng dùng Ghostty với nhiều pane chia, và dựa vào thông báo macOS gốc để biết khi nào một agent cần tôi. Nhưng nội dung thông báo của Claude Code luôn chỉ là "Claude is waiting for your input" mà không có ngữ cảnh, và khi mở đủ nhiều tab thì tôi thậm chí không đọc được tiêu đề nữa.
 
-Tôi đã thử vài trình điều phối lập trình nhưng phần lớn là app Electron/Tauri và hiệu năng làm tôi khó chịu. Tôi cũng thích terminal hơn vì các trình điều phối GUI buộc bạn theo workflow của họ. Vì vậy tôi xây cmux như một app macOS gốc bằng Swift/AppKit. Nó dùng libghostty để render terminal và đọc cấu hình Ghostty hiện có của bạn cho theme, font, và màu sắc.
+Tôi đã thử vài trình điều phối lập trình nhưng phần lớn là app Electron/Tauri và hiệu năng làm tôi khó chịu. Tôi cũng thích terminal hơn vì các trình điều phối GUI buộc bạn theo workflow của họ. Vì vậy tôi xây CMUX+ như một app macOS gốc bằng Swift/AppKit. Nó dùng libghostty để render terminal và đọc cấu hình Ghostty hiện có của bạn cho theme, font, và màu sắc.
 
-Những bổ sung chính là sidebar và hệ thống thông báo. Sidebar có các tab dọc hiển thị nhánh git, trạng thái/số PR liên kết, thư mục làm việc, các cổng đang lắng nghe, và dòng thông báo mới nhất cho từng workspace. Hệ thống thông báo bắt các chuỗi terminal (OSC 9/99/777) và có CLI (`cmux notify`) để bạn nối vào hook của agent cho Claude Code, OpenCode, v.v. Khi một agent đang chờ, pane của nó có vòng xanh và tab sáng lên ở sidebar, nên tôi có thể biết cái nào cần tôi giữa các split và tab. Cmd+Shift+U nhảy đến thông báo chưa đọc mới nhất.
+Những bổ sung chính là sidebar và hệ thống thông báo. Sidebar có các tab dọc hiển thị nhánh git, trạng thái/số PR liên kết, thư mục làm việc, các cổng đang lắng nghe, và dòng thông báo mới nhất cho từng workspace. Hệ thống thông báo bắt các chuỗi terminal (OSC 9/99/777) và có CLI (`cmuxplus notify`) để bạn nối vào hook của agent cho Claude Code, OpenCode, v.v. Khi một agent đang chờ, pane của nó có vòng xanh và tab sáng lên ở sidebar, nên tôi có thể biết cái nào cần tôi giữa các split và tab. Cmd+Shift+U nhảy đến thông báo chưa đọc mới nhất.
 
 Trình duyệt trong app có API script được chuyển từ [agent-browser](https://github.com/vercel-labs/agent-browser). Agent có thể chụp cây accessibility, lấy tham chiếu phần tử, click, điền form, và chạy JS. Bạn có thể chia một pane trình duyệt cạnh terminal và để Claude Code tương tác trực tiếp với dev server của bạn.
 
 Mọi thứ đều có thể script thông qua CLI và socket API — tạo workspace/tab, chia pane, gửi phím, mở URL trong trình duyệt.
 
-## Thiền của cmux
+## Thiền của CMUX+
 
-cmux không áp đặt cách developer sử dụng công cụ. Nó là một terminal và trình duyệt có CLI, và phần còn lại là do bạn quyết định.
+CMUX+ không áp đặt cách developer sử dụng công cụ. Nó là một terminal và trình duyệt có CLI, và phần còn lại là do bạn quyết định.
 
-cmux là một nguyên thủy, không phải giải pháp. Nó cung cấp terminal, trình duyệt, thông báo, workspace, split, tab, và một CLI để điều khiển tất cả. cmux không ép bạn theo một cách dùng agent lập trình đầy định kiến. Bạn xây gì từ những nguyên thủy đó là của bạn.
+CMUX+ là một nguyên thủy, không phải giải pháp. Nó cung cấp terminal, trình duyệt, thông báo, workspace, split, tab, và một CLI để điều khiển tất cả. CMUX+ không ép bạn theo một cách dùng agent lập trình đầy định kiến. Bạn xây gì từ những nguyên thủy đó là của bạn.
 
 Những developer giỏi nhất luôn tự xây công cụ của mình. Chưa ai tìm ra cách tốt nhất để làm việc với agent, và các đội ngũ xây sản phẩm đóng chắc chắn cũng chưa. Những developer gần codebase của họ nhất sẽ tìm ra trước.
 
@@ -140,7 +140,7 @@ Trao cho một triệu developer những nguyên thủy có thể ghép, và h�
 
 ## Tài liệu
 
-Để biết thêm về cách cấu hình cmux, [xem tài liệu của chúng tôi](https://cmux.com/docs/getting-started?utm_source=readme).
+Để biết thêm về cách cấu hình CMUX+, [xem tài liệu của chúng tôi](https://cmux.com/docs/getting-started?utm_source=readme).
 
 ## Phím tắt
 
@@ -230,29 +230,29 @@ Phím tắt công cụ developer của trình duyệt theo mặc định Safari 
 
 ## Bản dựng Nightly
 
-[Tải cmux NIGHTLY](https://github.com/manaflow-ai/cmux/releases/download/nightly/cmux-nightly-macos.dmg)
+[Tải CMUX+ NIGHTLY](https://github.com/tamekuniz/CMUX-Plus/releases/download/nightly/cmuxplus-nightly-macos.dmg)
 
-cmux NIGHTLY là một app riêng với bundle ID riêng, nên có thể chạy song song với bản ổn định. Được build tự động từ commit `main` mới nhất và tự cập nhật qua feed Sparkle riêng.
+CMUX+ NIGHTLY là một app riêng với bundle ID riêng, nên có thể chạy song song với bản ổn định. Được build tự động từ commit `main` mới nhất và tự cập nhật qua feed Sparkle riêng.
 
-Báo lỗi nightly trên [GitHub Issues](https://github.com/manaflow-ai/cmux/issues) hoặc trong [#nightly-bugs trên Discord](https://discord.gg/xsgFEVrWCZ).
+Báo lỗi nightly trên [GitHub Issues](https://github.com/tamekuniz/CMUX-Plus/issues) hoặc trong [#nightly-bugs trên Discord](https://discord.gg/xsgFEVrWCZ).
 
 ## Khôi phục phiên (hành vi hiện tại)
 
-Khi mở lại, cmux hiện chỉ khôi phục bố cục app và metadata:
+Khi mở lại, CMUX+ hiện chỉ khôi phục bố cục app và metadata:
 - Bố cục cửa sổ/workspace/pane
 - Thư mục làm việc
 - Scrollback của terminal (cố gắng hết mức)
 - URL và lịch sử điều hướng của trình duyệt
 
-cmux **không** khôi phục trạng thái tiến trình đang chạy bên trong terminal. Ví dụ, các phiên Claude Code/tmux/vim đang hoạt động chưa được khôi phục sau khi restart.
+CMUX+ **không** khôi phục trạng thái tiến trình đang chạy bên trong terminal. Ví dụ, các phiên Claude Code/tmux/vim đang hoạt động chưa được khôi phục sau khi restart.
 
 ## Lịch sử sao
 
-<a href="https://star-history.com/#manaflow-ai/cmux&Date">
+<a href="https://star-history.com/#tamekuniz/CMUX-Plus&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" />
-   <img alt="Biểu đồ lịch sử sao" src="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" width="600" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" />
+   <img alt="Biểu đồ lịch sử sao" src="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" width="600" />
  </picture>
 </a>
 
@@ -262,13 +262,13 @@ Cách tham gia:
 
 - Theo dõi chúng tôi trên X để cập nhật [@manaflowai](https://x.com/manaflowai), [@lawrencecchen](https://x.com/lawrencecchen), và [@austinywang](https://x.com/austinywang)
 - Tham gia trò chuyện trên [Discord](https://discord.gg/xsgFEVrWCZ)
-- Tạo và tham gia [GitHub issues](https://github.com/manaflow-ai/cmux/issues) và [discussions](https://github.com/manaflow-ai/cmux/discussions)
-- Cho chúng tôi biết bạn đang xây gì với cmux
+- Tạo và tham gia [GitHub issues](https://github.com/tamekuniz/CMUX-Plus/issues) và [discussions](https://github.com/tamekuniz/CMUX-Plus/discussions)
+- Cho chúng tôi biết bạn đang xây gì với CMUX+
 
 ## Cộng đồng
 
 - [Discord](https://discord.gg/xsgFEVrWCZ)
-- [GitHub](https://github.com/manaflow-ai/cmux)
+- [GitHub](https://github.com/tamekuniz/CMUX-Plus)
 - [X / Twitter](https://twitter.com/manaflowai)
 - [YouTube](https://www.youtube.com/channel/UCAa89_j-TWkrXfk9A3CbASw)
 - [LinkedIn](https://www.linkedin.com/company/manaflow-ai/)
@@ -276,12 +276,12 @@ Cách tham gia:
 
 ## Founder's Edition
 
-cmux miễn phí, mã nguồn mở, và sẽ luôn như vậy. Nếu bạn muốn hỗ trợ phát triển và có quyền truy cập sớm vào những thứ sắp tới:
+CMUX+ miễn phí, mã nguồn mở, và sẽ luôn như vậy. Nếu bạn muốn hỗ trợ phát triển và có quyền truy cập sớm vào những thứ sắp tới:
 
 **[Lấy Founder's Edition](https://buy.stripe.com/3cI00j2Ld0it5OU33r5EY0q)**
 
 - **Ưu tiên yêu cầu tính năng/sửa lỗi**
-- **Truy cập sớm: cmux AI cung cấp ngữ cảnh cho mọi workspace, tab và panel**
+- **Truy cập sớm: CMUX+ AI cung cấp ngữ cảnh cho mọi workspace, tab và panel**
 - **Truy cập sớm: ứng dụng iOS với terminal đồng bộ giữa desktop và điện thoại**
 - **Truy cập sớm: Cloud VM**
 - **Truy cập sớm: Voice mode**
@@ -289,6 +289,6 @@ cmux miễn phí, mã nguồn mở, và sẽ luôn như vậy. Nếu bạn muố
 
 ## Giấy phép
 
-cmux là mã nguồn mở theo [GPL-3.0-or-later](LICENSE).
+CMUX+ là mã nguồn mở theo [GPL-3.0-or-later](LICENSE).
 
 Nếu tổ chức của bạn không thể tuân thủ GPL, giấy phép thương mại có sẵn. Liên hệ [founders@manaflow.com](mailto:founders@manaflow.com) để biết chi tiết.

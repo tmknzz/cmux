@@ -1,0 +1,4 @@
+interface:
+  display_name: "CMUX+ Debug Windows"
+  short_description: "Tune CMUX+ debug windows and copy snapshots."
+  default_prompt: "Use this skill to manage CMUX+ sidebar/background/menu-bar debug windows, keep Debug menu wiring clean, and capture copyable debug snapshots."

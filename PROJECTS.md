@@ -1,6 +1,6 @@
 # PROJECTS
 
-Cross-project tracking (features, bugs, backlog) for cmux.
+Cross-project tracking (features, bugs, backlog) for CMUX+.
 
 ## Done
 - 2026-02-14: Fixed updater release regression path: made `.github/workflows/release.yml` Sparkle Info.plist key injection idempotent (re-running tags no longer fails with "Entry Already Exists"), and hardened `scripts/bump-version.sh` to keep `CURRENT_PROJECT_VERSION` above the latest published Sparkle appcast build number so upgrades from `0.27.0` can be detected.
@@ -99,7 +99,7 @@ Cross-project tracking (features, bugs, backlog) for cmux.
 - Browser panels: investigate intermittent crash/relaunch around WKWebView lifecycle and focus notifications.
 - Keyboard shortcuts: expand VM XCUITest coverage for focus + shortcuts (once Automation Mode is reliably enabled in the VM).
 - Socket API: tighten/standardize semantics around split insertion side (left/right/up/down) and pane selection (UUID vs index) across CLI/docs/server.
-- CLI: add an `it2`-compatible CLI shim (same subcommands/flags where feasible) that maps to cmux's socket API and ships in `Contents/Resources/bin`.
-- Browser automation parity: implement `docs/agent-browser-port-spec.md` (agent-browser command mapping, `cmux browser` surface targeting, move/reorder invariants, and v1 shim strategy).
+- CLI: add an `it2`-compatible CLI shim (same subcommands/flags where feasible) that maps to CMUX+'s socket API and ships in `Contents/Resources/bin`.
+- Browser automation parity: implement `docs/agent-browser-port-spec.md` (agent-browser command mapping, `cmuxplus browser` surface targeting, move/reorder invariants, and v1 shim strategy).
 - Tests: port the agent-browser coverage matrix into `tests_v2/` while keeping both v1 and v2 suites passing.
-- Planning: agent-browser port spec decisions locked (ID refs, caller-relative placement, cmux-native output, refs-first output defaults).
+- Planning: agent-browser port spec decisions locked (ID refs, caller-relative placement, CMUX+-native output, refs-first output defaults).

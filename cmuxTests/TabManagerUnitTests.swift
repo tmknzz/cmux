@@ -305,15 +305,15 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
         let output = """
         origin https://github.com/austinwang/cmux.git (fetch)
         origin https://github.com/austinwang/cmux.git (push)
-        upstream git@github.com:manaflow-ai/cmux.git (fetch)
-        upstream git@github.com:manaflow-ai/cmux.git (push)
-        backup ssh://git@github.com/manaflow-ai/cmux.git (fetch)
-        mirror https://gitlab.com/manaflow-ai/cmux.git (fetch)
+        upstream git@github.com:tamekuniz/CMUX-Plus.git (fetch)
+        upstream git@github.com:tamekuniz/CMUX-Plus.git (push)
+        backup ssh://git@github.com/tamekuniz/CMUX-Plus.git (fetch)
+        mirror https://gitlab.com/tamekuniz/CMUX-Plus.git (fetch)
         """
 
         XCTAssertEqual(
             TabManager.githubRepositorySlugs(fromGitRemoteVOutput: output),
-            ["manaflow-ai/cmux", "austinwang/cmux"]
+            ["tamekuniz/CMUX-Plus", "austinwang/cmux"]
         )
     }
 
@@ -322,19 +322,19 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
             TabManager.GitHubPullRequestProbeItem(
                 number: 1889,
                 state: "MERGED",
-                url: "https://github.com/manaflow-ai/cmux/pull/1889",
+                url: "https://github.com/tamekuniz/CMUX-Plus/pull/1889",
                 updatedAt: "2026-03-20T18:00:00Z"
             ),
             TabManager.GitHubPullRequestProbeItem(
                 number: 1891,
                 state: "OPEN",
-                url: "https://github.com/manaflow-ai/cmux/pull/1891",
+                url: "https://github.com/tamekuniz/CMUX-Plus/pull/1891",
                 updatedAt: "2026-03-19T18:00:00Z"
             ),
             TabManager.GitHubPullRequestProbeItem(
                 number: 1800,
                 state: "CLOSED",
-                url: "https://github.com/manaflow-ai/cmux/pull/1800",
+                url: "https://github.com/tamekuniz/CMUX-Plus/pull/1800",
                 updatedAt: "2026-03-21T18:00:00Z"
             ),
         ]
@@ -349,13 +349,13 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
         let olderOpen = TabManager.GitHubPullRequestProbeItem(
             number: 1880,
             state: "OPEN",
-            url: "https://github.com/manaflow-ai/cmux/pull/1880",
+            url: "https://github.com/tamekuniz/CMUX-Plus/pull/1880",
             updatedAt: "2026-03-18T18:00:00Z"
         )
         let newerOpen = TabManager.GitHubPullRequestProbeItem(
             number: 1890,
             state: "OPEN",
-            url: "https://github.com/manaflow-ai/cmux/pull/1890",
+            url: "https://github.com/tamekuniz/CMUX-Plus/pull/1890",
             updatedAt: "2026-03-20T18:00:00Z"
         )
 
@@ -369,7 +369,7 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
         let valid = TabManager.GitHubPullRequestProbeItem(
             number: 1888,
             state: "OPEN",
-            url: "https://github.com/manaflow-ai/cmux/pull/1888",
+            url: "https://github.com/tamekuniz/CMUX-Plus/pull/1888",
             updatedAt: "2026-03-20T18:00:00Z"
         )
 
@@ -378,7 +378,7 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
                 TabManager.GitHubPullRequestProbeItem(
                     number: 9999,
                     state: "WHATEVER",
-                    url: "https://github.com/manaflow-ai/cmux/pull/9999",
+                    url: "https://github.com/tamekuniz/CMUX-Plus/pull/9999",
                     updatedAt: "2026-03-21T18:00:00Z"
                 ),
                 TabManager.GitHubPullRequestProbeItem(
@@ -455,7 +455,7 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
             return
         }
 
-        let staleURL = try XCTUnwrap(URL(string: "https://github.com/manaflow-ai/cmux/pull/371"))
+        let staleURL = try XCTUnwrap(URL(string: "https://github.com/tamekuniz/CMUX-Plus/pull/371"))
         workspace.updatePanelGitBranch(panelId: mainPanelId, branch: "main", isDirty: false)
         workspace.updatePanelPullRequest(
             panelId: mainPanelId,
@@ -752,7 +752,7 @@ final class TabManagerPullRequestProbeTests: XCTestCase {
             panelId: panelId,
             number: 1052,
             label: "PR",
-            url: try XCTUnwrap(URL(string: "https://github.com/manaflow-ai/cmux/pull/1052")),
+            url: try XCTUnwrap(URL(string: "https://github.com/tamekuniz/CMUX-Plus/pull/1052")),
             status: .open,
             branch: "feature/sidebar-pr"
         )

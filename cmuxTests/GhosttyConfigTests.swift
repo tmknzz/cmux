@@ -355,14 +355,14 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             let releaseConfigURL = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "com.cmuxplus.app",
                 filename: "config",
                 contents: "font-size = 13\n"
             )
 
             XCTAssertEqual(
                 GhosttyApp.cmuxAppSupportConfigURLs(
-                    currentBundleIdentifier: "com.cmuxterm.app.debug",
+                    currentBundleIdentifier: "com.cmuxplus.app.debug",
                     appSupportDirectory: appSupportDirectory
                 ),
                 [releaseConfigURL]
@@ -374,20 +374,20 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "com.cmuxplus.app",
                 filename: "config",
                 contents: "font-size = 13\n"
             )
             let currentConfigURL = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app.debug.issue-829",
+                bundleIdentifier: "com.cmuxplus.app.debug.issue-829",
                 filename: "config.ghostty",
                 contents: "font-size = 14\n"
             )
 
             XCTAssertEqual(
                 GhosttyApp.cmuxAppSupportConfigURLs(
-                    currentBundleIdentifier: "com.cmuxterm.app.debug.issue-829",
+                    currentBundleIdentifier: "com.cmuxplus.app.debug.issue-829",
                     appSupportDirectory: appSupportDirectory
                 ),
                 [currentConfigURL]
@@ -399,7 +399,7 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "com.cmuxplus.app",
                 filename: "config",
                 contents: "font-size = 13\n"
             )
@@ -417,14 +417,14 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "com.cmuxplus.app",
                 filename: "config.ghostty",
                 contents: ""
             )
 
             XCTAssertTrue(
                 GhosttyApp.cmuxAppSupportConfigURLs(
-                    currentBundleIdentifier: "com.cmuxterm.app.debug",
+                    currentBundleIdentifier: "com.cmuxplus.app.debug",
                     appSupportDirectory: appSupportDirectory
                 ).isEmpty
             )
@@ -847,15 +847,15 @@ final class WorkspaceRemoteDaemonManifestTests: XCTestCase {
           "schemaVersion": 1,
           "appVersion": "0.62.0",
           "releaseTag": "v0.62.0",
-          "releaseURL": "https://github.com/manaflow-ai/cmux/releases/tag/v0.62.0",
+          "releaseURL": "https://github.com/tamekuniz/CMUX-Plus/releases/tag/v0.62.0",
           "checksumsAssetName": "cmuxd-remote-checksums.txt",
-          "checksumsURL": "https://github.com/manaflow-ai/cmux/releases/download/v0.62.0/cmuxd-remote-checksums.txt",
+          "checksumsURL": "https://github.com/tamekuniz/CMUX-Plus/releases/download/v0.62.0/cmuxd-remote-checksums.txt",
           "entries": [
             {
               "goOS": "linux",
               "goArch": "amd64",
               "assetName": "cmuxd-remote-linux-amd64",
-              "downloadURL": "https://github.com/manaflow-ai/cmux/releases/download/v0.62.0/cmuxd-remote-linux-amd64",
+              "downloadURL": "https://github.com/tamekuniz/CMUX-Plus/releases/download/v0.62.0/cmuxd-remote-linux-amd64",
               "sha256": "abc123"
             }
           ]
@@ -1874,7 +1874,7 @@ final class SocketControlSettingsTests: XCTestCase {
             environment: [
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-issue-153-tmux-compat.sock",
             ],
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "com.cmuxplus.app",
             isDebugBuild: false,
             probeStableDefaultPathEntry: { _ in .missing }
         )
@@ -1887,7 +1887,7 @@ final class SocketControlSettingsTests: XCTestCase {
             environment: [
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-issue-153-tmux-compat.sock",
             ],
-            bundleIdentifier: "com.cmuxterm.app.nightly",
+            bundleIdentifier: "com.cmuxplus.app.nightly",
             isDebugBuild: false,
             probeStableDefaultPathEntry: { _ in .missing }
         )
@@ -1900,7 +1900,7 @@ final class SocketControlSettingsTests: XCTestCase {
             environment: [
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-my-tag.sock",
             ],
-            bundleIdentifier: "com.cmuxterm.app.debug.my-tag",
+            bundleIdentifier: "com.cmuxplus.app.debug.my-tag",
             isDebugBuild: false
         )
 
@@ -1912,7 +1912,7 @@ final class SocketControlSettingsTests: XCTestCase {
             environment: [
                 "CMUX_SOCKET_PATH": "/tmp/cmux-staging-my-tag.sock",
             ],
-            bundleIdentifier: "com.cmuxterm.app.staging.my-tag",
+            bundleIdentifier: "com.cmuxplus.app.staging.my-tag",
             isDebugBuild: false
         )
 
@@ -1925,7 +1925,7 @@ final class SocketControlSettingsTests: XCTestCase {
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-forced.sock",
                 "CMUX_ALLOW_SOCKET_OVERRIDE": "1",
             ],
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "com.cmuxplus.app",
             isDebugBuild: false,
             probeStableDefaultPathEntry: { _ in .missing }
         )
@@ -1936,7 +1936,7 @@ final class SocketControlSettingsTests: XCTestCase {
     func testDefaultSocketPathByChannel() {
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "com.cmuxplus.app",
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
@@ -1944,7 +1944,7 @@ final class SocketControlSettingsTests: XCTestCase {
         )
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
-                bundleIdentifier: "com.cmuxterm.app.nightly",
+                bundleIdentifier: "com.cmuxplus.app.nightly",
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
@@ -1952,7 +1952,7 @@ final class SocketControlSettingsTests: XCTestCase {
         )
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
-                bundleIdentifier: "com.cmuxterm.app.debug.tag",
+                bundleIdentifier: "com.cmuxplus.app.debug.tag",
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
@@ -1960,7 +1960,7 @@ final class SocketControlSettingsTests: XCTestCase {
         )
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
-                bundleIdentifier: "com.cmuxterm.app.staging.tag",
+                bundleIdentifier: "com.cmuxplus.app.staging.tag",
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
@@ -1970,7 +1970,7 @@ final class SocketControlSettingsTests: XCTestCase {
 
     func testStableReleaseFallsBackToUserScopedSocketWhenStablePathOwnedByDifferentUser() {
         let path = SocketControlSettings.defaultSocketPath(
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "com.cmuxplus.app",
             isDebugBuild: false,
             currentUserID: 501,
             probeStableDefaultPathEntry: { _ in .socket(ownerUserID: 0) }
@@ -1981,7 +1981,7 @@ final class SocketControlSettingsTests: XCTestCase {
 
     func testStableReleaseFallsBackToUserScopedSocketWhenStablePathIsBlockedByNonSocketEntry() {
         let path = SocketControlSettings.defaultSocketPath(
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "com.cmuxplus.app",
             isDebugBuild: false,
             currentUserID: 501,
             probeStableDefaultPathEntry: { _ in .other(ownerUserID: 501) }
@@ -1994,7 +1994,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertTrue(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: [:],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )
@@ -2004,7 +2004,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: ["CMUX_TAG": "tests-v1"],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )
@@ -2014,7 +2014,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: [:],
-                bundleIdentifier: "com.cmuxterm.app.debug.tests-v1",
+                bundleIdentifier: "com.cmuxplus.app.debug.tests-v1",
                 isDebugBuild: true
             )
         )
@@ -2024,7 +2024,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: [:],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: false
             )
         )
@@ -2034,7 +2034,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: ["XCTestConfigurationFilePath": "/tmp/fake.xctestconfiguration"],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )
@@ -2044,7 +2044,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: ["XCInjectBundle": "/tmp/fake.xctest"],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )
@@ -2054,7 +2054,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: ["DYLD_INSERT_LIBRARIES": "/usr/lib/libXCTestBundleInject.dylib"],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )
@@ -2066,7 +2066,7 @@ final class SocketControlSettingsTests: XCTestCase {
         XCTAssertFalse(
             SocketControlSettings.shouldBlockUntaggedDebugLaunch(
                 environment: ["CMUX_UI_TEST_MODE": "1"],
-                bundleIdentifier: "com.cmuxterm.app.debug",
+                bundleIdentifier: "com.cmuxplus.app.debug",
                 isDebugBuild: true
             )
         )

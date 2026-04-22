@@ -53,7 +53,7 @@ export async function generateMetadata({
       title: t("title"),
       description: t("ogDescription"),
       url: alternates.canonical,
-      siteName: "cmux",
+      siteName: "CMUX+",
       type: "website",
     },
     twitter: {
@@ -92,12 +92,12 @@ export default async function LocaleLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "cmux",
+    name: "CMUX+",
     operatingSystem: "macOS",
     applicationCategory: "DeveloperApplication",
     url: "https://cmux.com",
     downloadUrl:
-      "https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg",
+      "https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg",
     description:
       "Native macOS terminal built on Ghostty. Works with Claude Code, Codex, OpenCode, Gemini CLI, Kiro, Aider, and any CLI tool. Vertical tabs, notification rings, split panes, and a socket API.",
     keywords:

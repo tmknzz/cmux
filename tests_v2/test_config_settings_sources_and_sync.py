@@ -62,7 +62,7 @@ def expect(condition: bool, message: str) -> None:
 def test_prefers_dotconfig_ghostty_and_overlays_cmux(executable: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="cmux-config-settings-") as tmp:
         home = Path(tmp)
-        cmux_config = home / "Library" / "Application Support" / "com.cmuxterm.app" / "config"
+        cmux_config = home / "Library" / "Application Support" / "com.cmuxplus.app" / "config"
         ghostty_config = home / ".config" / "ghostty" / "config"
 
         write_text(
@@ -88,12 +88,12 @@ def test_prefers_dotconfig_ghostty_and_overlays_cmux(executable: Path) -> None:
             f"synced preview should keep Ghostty-only keys with provenance: {synced_contents}",
         )
         expect(
-            "background = #222222  # from: ~/Library/Application Support/com.cmuxterm.app/config:1"
+            "background = #222222  # from: ~/Library/Application Support/com.cmuxplus.app/config:1"
             in synced_contents,
             f"synced preview should use cmux override for duplicate keys: {synced_contents}",
         )
         expect(
-            "copy-on-select = clipboard  # from: ~/Library/Application Support/com.cmuxterm.app/config:2"
+            "copy-on-select = clipboard  # from: ~/Library/Application Support/com.cmuxplus.app/config:2"
             in synced_contents,
             f"synced preview should include cmux-only keys: {synced_contents}",
         )
@@ -106,7 +106,7 @@ def test_prefers_dotconfig_ghostty_and_overlays_cmux(executable: Path) -> None:
 def test_falls_back_to_app_support_ghostty_when_dotconfig_missing(executable: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="cmux-config-settings-") as tmp:
         home = Path(tmp)
-        cmux_config = home / "Library" / "Application Support" / "com.cmuxterm.app" / "config"
+        cmux_config = home / "Library" / "Application Support" / "com.cmuxplus.app" / "config"
         ghostty_app_support = (
             home
             / "Library"
@@ -127,7 +127,7 @@ def test_falls_back_to_app_support_ghostty_when_dotconfig_missing(executable: Pa
 
         synced_contents = str(payload["synced"]["contents"])
         expect(
-            "font-size = 17  # from: ~/Library/Application Support/com.cmuxterm.app/config:1"
+            "font-size = 17  # from: ~/Library/Application Support/com.cmuxplus.app/config:1"
             in synced_contents,
             f"cmux override should win over Ghostty base font-size: {synced_contents}",
         )

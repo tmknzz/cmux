@@ -7,7 +7,7 @@
 - [x] Retry count/time surfaced in remote daemon/probe error details
 - [ ] Remove automatic remote service port mirroring (`ssh -L` from detected remote listening ports)
 - [ ] Add transport-scoped proxy broker (SOCKS5 + HTTP CONNECT) for remote traffic
-- [ ] Extend `cmuxd-remote` RPC beyond `hello/ping` with proxy stream methods (`proxy.open|close`)
+- [ ] Extend `cmuxplusd-remote` RPC beyond `hello/ping` with proxy stream methods (`proxy.open|close`)
 - [ ] Auto-wire WKWebView in remote workspaces to proxy via `WKWebsiteDataStore.proxyConfigurations`
 - [ ] Add browser proxy e2e tests (remote egress IP, websocket, reconnect continuity)
 - [ ] Implement PTY resize coordinator with tmux semantics (`smallest screen wins`)
@@ -47,7 +47,7 @@
   - Opens a new terminal
   - Shows user the diff to their config file (claude.json, opencode config, codex config, etc.)
   - Prompts user to type 'y' to confirm
-  - Implement as part of `cmux` CLI, menubar just triggers the CLI command
+  - Implement as part of `cmuxplus` CLI, menubar just triggers the CLI command
 
 ## Additional Integrations
 - [ ] Codex integration
@@ -75,7 +75,7 @@
 - [ ] Notification popover: each button item should show outline outside when focused/hovered
 - [ ] Notification popover: add right-click context menu to mark as read/unread
 - [ ] Right-click tab should allow renaming that workspace
-- [ ] Cmd+click should open links in cmux (browser panel) instead of external browser
+- [ ] Cmd+click should open links in CMUX+ (browser panel) instead of external browser
 - [ ] "Waiting for input" notification should include custom terminal title if set
 - [ ] Close button for current/active tab should always be visible (not just on hover)
 - [ ] Add browser icon to the left of the plus button in the tab bar

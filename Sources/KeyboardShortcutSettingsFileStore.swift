@@ -21,7 +21,7 @@ final class CmuxSettingsFileStore {
     static let shared = CmuxSettingsFileStore()
 
     static let currentSchemaVersion = 1
-    static let schemaURLString = "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json"
+    static let schemaURLString = "https://raw.githubusercontent.com/tamekuniz/CMUX-Plus/main/web/data/cmuxplus-settings.schema.json"
     // Keep this in sync with the parser below and the web schema/docs. Settings UI rows
     // validate against this set so new persisted settings need an explicit settings.json review.
     static let supportedSettingsJSONPaths: Set<String> = [
@@ -95,7 +95,7 @@ final class CmuxSettingsFileStore {
         "shortcuts.bindings",
     ]
 
-    private static let releaseBundleIdentifier = "com.cmuxterm.app"
+    private static let releaseBundleIdentifier = "com.cmuxplus.app"
     private static let backupsDefaultsKey = "cmux.settingsFile.backups.v1"
     fileprivate static let trustedDirectoriesBackupIdentifier = "customCommands.trustedDirectories"
     fileprivate static let socketPasswordBackupIdentifier = "automation.socketPassword"

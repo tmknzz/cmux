@@ -1,11 +1,11 @@
 > Этот перевод создан Claude. Если у вас есть предложения по улучшению, откройте PR.
 
-<h1 align="center">cmux</h1>
+<h1 align="center">CMUX+</h1>
 <p align="center">Терминал macOS на базе Ghostty с вертикальными вкладками и уведомлениями для AI-агентов программирования</p>
 
 <p align="center">
-  <a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-    <img src="./docs/assets/macos-badge.png" alt="Скачать cmux для macOS" width="180" />
+  <a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+    <img src="./docs/assets/macos-badge.png" alt="Скачать CMUX+ для macOS" width="180" />
   </a>
 </p>
 
@@ -16,15 +16,15 @@
 <p align="center">
   <a href="https://x.com/manaflowai"><img src="https://img.shields.io/badge/@manaflow-555?logo=x" alt="X / Twitter" /></a>
   <a href="https://discord.gg/xsgFEVrWCZ"><img src="https://img.shields.io/badge/Discord-555?logo=discord" alt="Discord" /></a>
-  <a href="https://github.com/manaflow-ai/cmux"><img src="https://img.shields.io/github/stars/manaflow-ai/cmux?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
+  <a href="https://github.com/tamekuniz/CMUX-Plus"><img src="https://img.shields.io/github/stars/tamekuniz/CMUX-Plus?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
 </p>
 
 <p align="center">
-  <img src="./docs/assets/main-first-image.png" alt="Скриншот cmux" width="900" />
+  <img src="./docs/assets/main-first-image.png" alt="Скриншот CMUX+" width="900" />
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ Демо-видео</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of cmux</a>
+  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ Демо-видео</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of CMUX+</a>
 </p>
 
 ## Возможности
@@ -69,16 +69,16 @@
 <tr>
 <td width="40%" valign="middle">
 <h3>SSH</h3>
-<code>cmux ssh user@remote</code> создаёт рабочее пространство для удалённой машины. Панели браузера маршрутизируются через удалённую сеть, поэтому localhost просто работает. Перетащите изображение в удалённую сессию для загрузки через scp.
+<code>cmuxplus ssh user@remote</code> создаёт рабочее пространство для удалённой машины. Панели браузера маршрутизируются через удалённую сеть, поэтому localhost просто работает. Перетащите изображение в удалённую сессию для загрузки через scp.
 </td>
 <td width="60%">
-<img src="./docs/assets/ssh.png" alt="cmux SSH" width="100%" />
+<img src="./docs/assets/ssh.png" alt="CMUX+ SSH" width="100%" />
 </td>
 </tr>
 <tr>
 <td width="40%" valign="middle">
 <h3>Claude Code Teams</h3>
-<code>cmux claude-teams</code> запускает режим напарника Claude Code одной командой. Напарники появляются как нативные разделения с метаданными в боковой панели и уведомлениями. tmux не требуется.
+<code>cmuxplus claude-teams</code> запускает режим напарника Claude Code одной командой. Напарники появляются как нативные разделения с метаданными в боковой панели и уведомлениями. tmux не требуется.
 </td>
 <td width="60%">
 <img src="./docs/assets/claude-code-teams.png" alt="Claude Code Teams" width="100%" />
@@ -97,44 +97,44 @@
 
 ### DMG (рекомендуется)
 
-<a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-  <img src="./docs/assets/macos-badge.png" alt="Скачать cmux для macOS" width="180" />
+<a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+  <img src="./docs/assets/macos-badge.png" alt="Скачать CMUX+ для macOS" width="180" />
 </a>
 
-Откройте файл `.dmg` и перетащите cmux в папку «Программы». cmux автоматически обновляется через Sparkle, поэтому скачивание требуется только один раз.
+Откройте файл `.dmg` и перетащите CMUX+ в папку «Программы». CMUX+ автоматически обновляется через Sparkle, поэтому скачивание требуется только один раз.
 
 ### Homebrew
 
 ```bash
-brew tap manaflow-ai/cmux
-brew install --cask cmux
+brew tap tamekuniz/cmuxplus
+brew install --cask tamekuniz/cmuxplus/cmuxplus
 ```
 
 Для обновления в дальнейшем:
 
 ```bash
-brew upgrade --cask cmux
+brew upgrade --cask cmuxplus
 ```
 
 При первом запуске macOS может попросить вас подтвердить открытие приложения от идентифицированного разработчика. Нажмите **Открыть**, чтобы продолжить.
 
-## Почему cmux?
+## Почему CMUX+?
 
 Я запускаю множество сессий Claude Code и Codex параллельно. Я использовал Ghostty с кучей разделённых панелей и полагался на нативные уведомления macOS, чтобы знать, когда агент нуждается во мне. Но тело уведомления Claude Code — это всегда просто «Claude is waiting for your input» без контекста, а при достаточном количестве открытых вкладок я даже не мог прочитать заголовки.
 
-Я попробовал несколько оркестраторов для кодирования, но большинство из них были приложениями Electron/Tauri, и их производительность меня раздражала. К тому же я просто предпочитаю терминал, поскольку GUI-оркестраторы привязывают вас к своему рабочему процессу. Поэтому я создал cmux как нативное приложение macOS на Swift/AppKit. Оно использует libghostty для рендеринга терминала и читает вашу существующую конфигурацию Ghostty для тем, шрифтов и цветов.
+Я попробовал несколько оркестраторов для кодирования, но большинство из них были приложениями Electron/Tauri, и их производительность меня раздражала. К тому же я просто предпочитаю терминал, поскольку GUI-оркестраторы привязывают вас к своему рабочему процессу. Поэтому я создал CMUX+ как нативное приложение macOS на Swift/AppKit. Оно использует libghostty для рендеринга терминала и читает вашу существующую конфигурацию Ghostty для тем, шрифтов и цветов.
 
-Основные дополнения — это боковая панель и система уведомлений. Боковая панель имеет вертикальные вкладки, которые показывают ветку git, статус/номер связанного PR, рабочий каталог, прослушиваемые порты и текст последнего уведомления для каждого рабочего пространства. Система уведомлений перехватывает терминальные последовательности (OSC 9/99/777) и имеет CLI (`cmux notify`), который можно подключить к хукам агентов для Claude Code, OpenCode и т.д. Когда агент ожидает, его панель получает синее кольцо, а вкладка подсвечивается в боковой панели, так что я могу определить, какой из них нуждается во мне, среди разделений и вкладок. Cmd+Shift+U переходит к последнему непрочитанному.
+Основные дополнения — это боковая панель и система уведомлений. Боковая панель имеет вертикальные вкладки, которые показывают ветку git, статус/номер связанного PR, рабочий каталог, прослушиваемые порты и текст последнего уведомления для каждого рабочего пространства. Система уведомлений перехватывает терминальные последовательности (OSC 9/99/777) и имеет CLI (`cmuxplus notify`), который можно подключить к хукам агентов для Claude Code, OpenCode и т.д. Когда агент ожидает, его панель получает синее кольцо, а вкладка подсвечивается в боковой панели, так что я могу определить, какой из них нуждается во мне, среди разделений и вкладок. Cmd+Shift+U переходит к последнему непрочитанному.
 
 Встроенный браузер имеет скриптуемый API, портированный из [agent-browser](https://github.com/vercel-labs/agent-browser). Агенты могут делать снимок дерева доступности, получать ссылки на элементы, кликать, заполнять формы и выполнять JS. Вы можете разделить панель браузера рядом с терминалом и позволить Claude Code взаимодействовать с вашим сервером разработки напрямую.
 
 Всё скриптуемо через CLI и socket API — создание рабочих пространств/вкладок, разделение панелей, отправка нажатий клавиш, открытие URL в браузере.
 
-## The Zen of cmux
+## The Zen of CMUX+
 
-cmux не навязывает разработчикам, как использовать свои инструменты. Это терминал и браузер с CLI, а остальное зависит от вас.
+CMUX+ не навязывает разработчикам, как использовать свои инструменты. Это терминал и браузер с CLI, а остальное зависит от вас.
 
-cmux — это примитив, а не решение. Он даёт вам терминал, браузер, уведомления, рабочие пространства, разделения, вкладки и CLI для управления всем этим. cmux не заставляет вас использовать агентов для кодирования определённым образом. То, что вы построите из этих примитивов, принадлежит вам.
+CMUX+ — это примитив, а не решение. Он даёт вам терминал, браузер, уведомления, рабочие пространства, разделения, вкладки и CLI для управления всем этим. CMUX+ не заставляет вас использовать агентов для кодирования определённым образом. То, что вы построите из этих примитивов, принадлежит вам.
 
 Лучшие разработчики всегда создавали собственные инструменты. Никто ещё не нашёл лучший способ работы с агентами, и команды, создающие закрытые продукты, тоже этого не сделали. Разработчики, ближе всех к своим кодовым базам, найдут это первыми.
 
@@ -142,7 +142,7 @@ cmux — это примитив, а не решение. Он даёт вам �
 
 ## Документация
 
-Подробнее о настройке cmux читайте в [нашей документации](https://cmux.com/docs/getting-started?utm_source=readme).
+Подробнее о настройке CMUX+ читайте в [нашей документации](https://cmux.com/docs/getting-started?utm_source=readme).
 
 ## Сочетания Клавиш
 
@@ -232,27 +232,27 @@ cmux — это примитив, а не решение. Он даёт вам �
 
 ## Ночные сборки
 
-[Скачать cmux NIGHTLY](https://github.com/manaflow-ai/cmux/releases/download/nightly/cmux-nightly-macos.dmg)
+[Скачать CMUX+ NIGHTLY](https://github.com/tamekuniz/CMUX-Plus/releases/download/nightly/cmuxplus-nightly-macos.dmg)
 
-cmux NIGHTLY — это отдельное приложение с собственным идентификатором пакета, поэтому оно работает параллельно со стабильной версией. Собирается автоматически из последнего коммита `main` и обновляется через собственный канал Sparkle.
+CMUX+ NIGHTLY — это отдельное приложение с собственным идентификатором пакета, поэтому оно работает параллельно со стабильной версией. Собирается автоматически из последнего коммита `main` и обновляется через собственный канал Sparkle.
 
 ## Восстановление сессии (текущее поведение)
 
-При перезапуске cmux в настоящее время восстанавливает только макет приложения и метаданные:
+При перезапуске CMUX+ в настоящее время восстанавливает только макет приложения и метаданные:
 - Макет окон/рабочих пространств/панелей
 - Рабочие каталоги
 - Scrollback терминала (по возможности)
 - URL браузера и история навигации
 
-cmux **не** восстанавливает состояние живых процессов внутри терминальных приложений. Например, активные сессии Claude Code/tmux/vim пока не возобновляются после перезапуска.
+CMUX+ **не** восстанавливает состояние живых процессов внутри терминальных приложений. Например, активные сессии Claude Code/tmux/vim пока не возобновляются после перезапуска.
 
 ## История звёзд
 
-<a href="https://star-history.com/#manaflow-ai/cmux&Date">
+<a href="https://star-history.com/#tamekuniz/CMUX-Plus&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" width="600" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" width="600" />
  </picture>
 </a>
 
@@ -262,13 +262,13 @@ cmux **не** восстанавливает состояние живых пр�
 
 - Подписывайтесь на нас в X для получения обновлений [@manaflowai](https://x.com/manaflowai), [@lawrencecchen](https://x.com/lawrencecchen) и [@austinywang](https://x.com/austinywang)
 - Присоединяйтесь к обсуждению в [Discord](https://discord.gg/xsgFEVrWCZ)
-- Создавайте и участвуйте в [GitHub issues](https://github.com/manaflow-ai/cmux/issues) и [обсуждениях](https://github.com/manaflow-ai/cmux/discussions)
-- Расскажите нам, что вы создаёте с помощью cmux
+- Создавайте и участвуйте в [GitHub issues](https://github.com/tamekuniz/CMUX-Plus/issues) и [обсуждениях](https://github.com/tamekuniz/CMUX-Plus/discussions)
+- Расскажите нам, что вы создаёте с помощью CMUX+
 
 ## Сообщество
 
 - [Discord](https://discord.gg/xsgFEVrWCZ)
-- [GitHub](https://github.com/manaflow-ai/cmux)
+- [GitHub](https://github.com/tamekuniz/CMUX-Plus)
 - [X / Twitter](https://twitter.com/manaflowai)
 - [YouTube](https://www.youtube.com/channel/UCAa89_j-TWkrXfk9A3CbASw)
 - [LinkedIn](https://www.linkedin.com/company/manaflow-ai/)
@@ -276,12 +276,12 @@ cmux **не** восстанавливает состояние живых пр�
 
 ## Издание основателя
 
-cmux бесплатен, с открытым исходным кодом и всегда будет таким. Если вы хотите поддержать разработку и получить ранний доступ к будущим возможностям:
+CMUX+ бесплатен, с открытым исходным кодом и всегда будет таким. Если вы хотите поддержать разработку и получить ранний доступ к будущим возможностям:
 
 **[Получить Издание основателя](https://buy.stripe.com/3cI00j2Ld0it5OU33r5EY0q)**
 
 - **Приоритетные запросы на функции/исправления ошибок**
-- **Ранний доступ: cmux AI, который даёт контекст по каждому рабочему пространству, вкладке и панели**
+- **Ранний доступ: CMUX+ AI, который даёт контекст по каждому рабочему пространству, вкладке и панели**
 - **Ранний доступ: приложение для iOS с терминалами, синхронизированными между компьютером и телефоном**
 - **Ранний доступ: облачные виртуальные машины**
 - **Ранний доступ: голосовой режим**
@@ -289,6 +289,6 @@ cmux бесплатен, с открытым исходным кодом и вс
 
 ## Лицензия
 
-cmux распространяется с открытым исходным кодом по лицензии [GPL-3.0-or-later](LICENSE).
+CMUX+ распространяется с открытым исходным кодом по лицензии [GPL-3.0-or-later](LICENSE).
 
 Если ваша организация не может соблюдать условия GPL, доступна коммерческая лицензия. Свяжитесь с [founders@manaflow.com](mailto:founders@manaflow.com) для получения подробностей.

@@ -1,10 +1,10 @@
 > この翻訳は Claude によって生成されました。改善の提案がある場合は、PR を作成してください。
 
-<h1 align="center">cmux</h1>
+<h1 align="center">CMUX+</h1>
 <p align="center">AIコーディングエージェント向けの縦タブと通知機能を備えたGhosttyベースのmacOSターミナル</p>
 
 <p align="center">
-  <a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
+  <a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
     <img src="./docs/assets/macos-badge.png" alt="macOS版cmuxをダウンロード" width="180" />
   </a>
 </p>
@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://x.com/manaflowai"><img src="https://img.shields.io/badge/@manaflow-555?logo=x" alt="X / Twitter" /></a>
   <a href="https://discord.gg/xsgFEVrWCZ"><img src="https://img.shields.io/badge/Discord-555?logo=discord" alt="Discord" /></a>
-  <a href="https://github.com/manaflow-ai/cmux"><img src="https://img.shields.io/github/stars/manaflow-ai/cmux?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
+  <a href="https://github.com/tamekuniz/CMUX-Plus"><img src="https://img.shields.io/github/stars/tamekuniz/CMUX-Plus?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ デモ動画</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of cmux</a>
+  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ デモ動画</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of CMUX+</a>
 </p>
 
 ## 機能
@@ -69,16 +69,16 @@
 <tr>
 <td width="40%" valign="middle">
 <h3>SSH</h3>
-<code>cmux ssh user@remote</code> でリモートマシン用のワークスペースを作成。ブラウザペインはリモートネットワーク経由でルーティングされるため、localhostがそのまま動作します。リモートセッションに画像をドラッグするとscpでアップロードされます。
+<code>cmuxplus ssh user@remote</code> でリモートマシン用のワークスペースを作成。ブラウザペインはリモートネットワーク経由でルーティングされるため、localhostがそのまま動作します。リモートセッションに画像をドラッグするとscpでアップロードされます。
 </td>
 <td width="60%">
-<img src="./docs/assets/ssh.png" alt="cmux SSH" width="100%" />
+<img src="./docs/assets/ssh.png" alt="CMUX+ SSH" width="100%" />
 </td>
 </tr>
 <tr>
 <td width="40%" valign="middle">
 <h3>Claude Code Teams</h3>
-<code>cmux claude-teams</code> でClaude Codeのチームメイトモードをワンコマンドで実行。チームメイトはネイティブ分割として生成され、サイドバーのメタデータと通知が表示されます。tmuxは不要です。
+<code>cmuxplus claude-teams</code> でClaude Codeのチームメイトモードをワンコマンドで実行。チームメイトはネイティブ分割として生成され、サイドバーのメタデータと通知が表示されます。tmuxは不要です。
 </td>
 <td width="60%">
 <img src="./docs/assets/claude-code-teams.png" alt="Claude Code Teams" width="100%" />
@@ -97,7 +97,7 @@
 
 ### DMG（推奨）
 
-<a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
+<a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
   <img src="./docs/assets/macos-badge.png" alt="macOS版cmuxをダウンロード" width="180" />
 </a>
 
@@ -106,14 +106,14 @@
 ### Homebrew
 
 ```bash
-brew tap manaflow-ai/cmux
-brew install --cask cmux
+brew tap tamekuniz/cmuxplus
+brew install --cask tamekuniz/cmuxplus/cmuxplus
 ```
 
 後で更新する場合：
 
 ```bash
-brew upgrade --cask cmux
+brew upgrade --cask cmuxplus
 ```
 
 初回起動時、macOSが確認済みの開発者からのアプリを開くことの確認を求める場合があります。**開く**をクリックして続行してください。
@@ -124,13 +124,13 @@ brew upgrade --cask cmux
 
 いくつかのコーディングオーケストレーターを試しましたが、そのほとんどがElectron/Tauriアプリで、パフォーマンスが気になりました。また、GUIオーケストレーターはそのワークフローに縛られるため、単純にターミナルのほうが好みです。そこで、cmuxをSwift/AppKitのネイティブmacOSアプリとして構築しました。ターミナルレンダリングにはlibghosttyを使用し、テーマ、フォント、カラーは既存のGhostty設定を読み込みます。
 
-主な追加機能はサイドバーと通知システムです。サイドバーには、各ワークスペースのgitブランチ、リンクされたPRのステータス/番号、作業ディレクトリ、リッスン中のポート、最新の通知テキストを表示する縦タブがあります。通知システムはターミナルシーケンス（OSC 9/99/777）を検出し、Claude Code、OpenCodeなどのエージェントフックに接続できるCLI（`cmux notify`）を備えています。エージェントが待機中のとき、そのペインに青いリングが表示され、サイドバーのタブが点灯するので、分割やタブをまたいでどれが私を必要としているかがわかります。Cmd+Shift+Uで最新の未読にジャンプします。
+主な追加機能はサイドバーと通知システムです。サイドバーには、各ワークスペースのgitブランチ、リンクされたPRのステータス/番号、作業ディレクトリ、リッスン中のポート、最新の通知テキストを表示する縦タブがあります。通知システムはターミナルシーケンス（OSC 9/99/777）を検出し、Claude Code、OpenCodeなどのエージェントフックに接続できるCLI（`cmuxplus notify`）を備えています。エージェントが待機中のとき、そのペインに青いリングが表示され、サイドバーのタブが点灯するので、分割やタブをまたいでどれが私を必要としているかがわかります。Cmd+Shift+Uで最新の未読にジャンプします。
 
 アプリ内ブラウザには[agent-browser](https://github.com/vercel-labs/agent-browser)から移植されたスクリプタブルなAPIがあります。エージェントはアクセシビリティツリーのスナップショットを取得し、要素参照を取得し、クリック、フォーム入力、JSの評価が可能です。ターミナルの横にブラウザペインを分割し、Claude Codeに開発サーバーと直接やり取りさせることができます。
 
 すべてがCLIとsocket APIを通じてスクリプタブルです — ワークスペース/タブの作成、ペインの分割、キーストロークの送信、ブラウザでのURL表示。
 
-## The Zen of cmux
+## The Zen of CMUX+
 
 cmuxは開発者のツールの使い方を規定しません。ターミナルとブラウザにCLIがあり、あとはあなた次第です。
 
@@ -232,9 +232,9 @@ cmuxの設定方法の詳細は、[ドキュメントをご覧ください](http
 
 ## ナイトリービルド
 
-[cmux NIGHTLYをダウンロード](https://github.com/manaflow-ai/cmux/releases/download/nightly/cmux-nightly-macos.dmg)
+[CMUX+ NIGHTLYをダウンロード](https://github.com/tamekuniz/CMUX-Plus/releases/download/nightly/cmuxplus-nightly-macos.dmg)
 
-cmux NIGHTLYは独自のバンドルIDを持つ別のアプリなので、安定版と並行して実行できます。最新の`main`コミットから自動的にビルドされ、独自のSparkleフィード経由で自動更新されます。
+CMUX+ NIGHTLYは独自のバンドルIDを持つ別のアプリなので、安定版と並行して実行できます。最新の`main`コミットから自動的にビルドされ、独自のSparkleフィード経由で自動更新されます。
 
 ## セッション復元（現在の動作）
 
@@ -248,11 +248,11 @@ cmuxはターミナルアプリ内のライブプロセスの状態を復元**�
 
 ## Star History
 
-<a href="https://star-history.com/#manaflow-ai/cmux&Date">
+<a href="https://star-history.com/#tamekuniz/CMUX-Plus&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" width="600" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" width="600" />
  </picture>
 </a>
 
@@ -262,13 +262,13 @@ cmuxはターミナルアプリ内のライブプロセスの状態を復元**�
 
 - Xでフォロー：[@manaflowai](https://x.com/manaflowai)、[@lawrencecchen](https://x.com/lawrencecchen)、[@austinywang](https://x.com/austinywang)
 - [Discord](https://discord.gg/xsgFEVrWCZ)で会話に参加
-- [GitHubのIssues](https://github.com/manaflow-ai/cmux/issues)や[ディスカッション](https://github.com/manaflow-ai/cmux/discussions)に参加
+- [GitHubのIssues](https://github.com/tamekuniz/CMUX-Plus/issues)や[ディスカッション](https://github.com/tamekuniz/CMUX-Plus/discussions)に参加
 - cmuxで何を構築しているか教えてください
 
 ## コミュニティ
 
 - [Discord](https://discord.gg/xsgFEVrWCZ)
-- [GitHub](https://github.com/manaflow-ai/cmux)
+- [GitHub](https://github.com/tamekuniz/CMUX-Plus)
 - [X / Twitter](https://twitter.com/manaflowai)
 - [YouTube](https://www.youtube.com/channel/UCAa89_j-TWkrXfk9A3CbASw)
 - [LinkedIn](https://www.linkedin.com/company/manaflow-ai/)

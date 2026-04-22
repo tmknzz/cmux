@@ -12259,8 +12259,8 @@ enum FeedbackComposerBridge {
 private struct SidebarHelpMenuButton: View {
     private let docsURL = URL(string: "https://cmux.com/docs")
     private let changelogURL = URL(string: "https://cmux.com/docs/changelog")
-    private let githubURL = URL(string: "https://github.com/manaflow-ai/cmux")
-    private let githubIssuesURL = URL(string: "https://github.com/manaflow-ai/cmux/issues")
+    private let githubURL = URL(string: "https://github.com/tamekuniz/CMUX-Plus")
+    private let githubIssuesURL = URL(string: "https://github.com/tamekuniz/CMUX-Plus/issues")
     private let discordURL = URL(string: "https://discord.gg/xsgFEVrWCZ")
     private let helpTitle = String(localized: "sidebar.help.button", defaultValue: "Help")
     private let buttonSize: CGFloat = 22
@@ -12304,7 +12304,7 @@ private struct SidebarHelpMenuButton: View {
     private var helpPopover: some View {
         VStack(alignment: .leading, spacing: 2) {
             helpOptionButton(
-                title: String(localized: "sidebar.help.welcome", defaultValue: "Welcome to cmux!"),
+                title: String(localized: "sidebar.help.welcome", defaultValue: "Welcome to CMUX+!"),
                 action: .welcome,
                 accessibilityIdentifier: "SidebarHelpMenuOptionWelcome",
                 isExternalLink: false

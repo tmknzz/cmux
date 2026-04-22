@@ -106,7 +106,7 @@ export default async function AfterSignInPage({ searchParams: searchParamsPromis
     : null;
 
   // Native app deep link. Only emit the handoff when both tokens are
-  // available; otherwise the OpenNativeClient would launch cmux with an empty
+  // available; otherwise the OpenNativeClient would launch CMUX+ with an empty
   // auth payload, which would produce a spurious "not signed in" flash.
   if (
     refreshToken &&

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# Inside-out codesign a cmux .app bundle for Developer ID + notarization.
+# Inside-out codesign a cmuxplus .app bundle for Developer ID + notarization.
 #
 # Usage:
 #   scripts/sign-cmux-bundle.sh <app-path> <app-entitlements> <signing-identity>
 #
 # Example:
 #   scripts/sign-cmux-bundle.sh \
-#     "build-universal/Build/Products/Release/cmux NIGHTLY.app" \
-#     cmux.nightly.entitlements \
+#     "build-universal/Build/Products/Release/cmuxplus NIGHTLY.app" \
+#     cmuxplus.nightly.entitlements \
 #     "Developer ID Application: Manaflow, Inc. (7WLXT3NR37)"
 #
 # Optional env:
-#   CMUX_HELPER_ENTITLEMENTS  (default: cmux-helper.entitlements)
+#   CMUX_HELPER_ENTITLEMENTS  (default: cmuxplus-helper.entitlements)
 #   CMUX_TIMESTAMP             set to "none" for un-timestamped local sigs
 #
 # Signs in the Apple-documented inside-out order:
@@ -35,7 +35,7 @@ fi
 APP_PATH="$1"
 APP_ENTITLEMENTS="$2"
 IDENTITY="$3"
-HELPER_ENTITLEMENTS="${CMUX_HELPER_ENTITLEMENTS:-cmux-helper.entitlements}"
+HELPER_ENTITLEMENTS="${CMUX_HELPER_ENTITLEMENTS:-cmuxplus-helper.entitlements}"
 
 if [[ ! -d "$APP_PATH" ]]; then
   echo "error: app bundle not found at $APP_PATH" >&2

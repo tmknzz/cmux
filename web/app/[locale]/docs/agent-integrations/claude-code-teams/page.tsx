@@ -32,9 +32,9 @@ export default function ClaudeCodeTeamsPage() {
       />
 
       <h2>{t("usage")}</h2>
-      <CodeBlock lang="bash">{`cmux claude-teams
-cmux claude-teams --continue
-cmux claude-teams --model sonnet`}</CodeBlock>
+      <CodeBlock lang="bash">{`cmuxplus claude-teams
+cmuxplus claude-teams --continue
+cmuxplus claude-teams --model sonnet`}</CodeBlock>
       <p>{t("usageDesc")}</p>
 
       <h2>{t("howItWorks")}</h2>

@@ -4,7 +4,7 @@ import { buildAlternates } from "../../../../i18n/seo";
 import { Link } from "../../../../i18n/navigation";
 import { CodeBlock } from "../../components/code-block";
 import { Callout } from "../../components/callout";
-import settingsSchema from "../../../../data/cmux-settings.schema.json";
+import settingsSchema from "../../../../data/cmuxplus-settings.schema.json";
 import { shortcutCategories, type LocalizedText } from "../../../../data/cmux-shortcuts";
 
 type SchemaProperty = {
@@ -30,9 +30,9 @@ const typedSettingsSchema = settingsSchema as SchemaDocument;
 const schemaProperties = typedSettingsSchema.properties ?? {};
 const schemaUrl =
   typedSettingsSchema.$id ??
-  "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json";
+  "https://raw.githubusercontent.com/tamekuniz/CMUX-Plus/main/web/data/cmuxplus-settings.schema.json";
 const schemaSourceUrl =
-  "https://github.com/manaflow-ai/cmux/blob/main/web/data/cmux-settings.schema.json";
+  "https://github.com/tamekuniz/CMUX-Plus/blob/main/web/data/cmuxplus-settings.schema.json";
 const sectionOrder = [
   "app",
   "terminal",
@@ -251,10 +251,10 @@ scrollback-limit = 50000000
 split-divider-color = #3e4451
 working-directory = ~/code`}</CodeBlock>
 
-      <h2>cmux settings.json</h2>
+      <h2>CMUX+ settings.json</h2>
       <p>
-        cmux keeps app-owned settings in a separate user file instead of mixing them into Ghostty
-        config. On launch, if neither settings location exists, cmux writes a commented template to{" "}
+        CMUX+ keeps app-owned settings in a separate user file instead of mixing them into Ghostty
+        config. On launch, if neither settings location exists, CMUX+ writes a commented template to{" "}
         <code>~/.config/cmux/settings.json</code>.
       </p>
       <ol>
@@ -262,7 +262,7 @@ working-directory = ~/code`}</CodeBlock>
           <code>~/.config/cmux/settings.json</code>
         </li>
         <li>
-          <code>~/Library/Application Support/com.cmuxterm.app/settings.json</code>
+          <code>~/Library/Application Support/com.cmuxplus.app/settings.json</code>
         </li>
       </ol>
       <Callout type="info">
@@ -272,11 +272,11 @@ working-directory = ~/code`}</CodeBlock>
       </Callout>
       <Callout type="info">
         <strong>Reload:</strong> edit the file, then use <code>Cmd+Shift+,</code> or{" "}
-        <code>cmux reload-config</code> to re-read it without restarting the app.
+        <code>cmuxplus reload-config</code> to re-read it without restarting the app.
       </Callout>
       <Callout type="warn">
         <strong>Migrations:</strong> keep <code>schemaVersion</code> at <code>1</code> for now.
-        Future cmux versions will use that field for upgrades. If cmux sees a newer schema version,
+        Future CMUX+ versions will use that field for upgrades. If CMUX+ sees a newer schema version,
         it logs a warning and parses known keys only.
       </Callout>
       <p>
@@ -291,7 +291,7 @@ working-directory = ~/code`}</CodeBlock>
       <h2>Schema reference</h2>
       <p>
         This reference covers every supported key in <code>settings.json</code>. The embedded
-        browser, terminal, sidebar, notifications, automation, and cmux-owned keyboard shortcuts
+        browser, terminal, sidebar, notifications, automation, and CMUX+-owned keyboard shortcuts
         all live here.
       </p>
 
@@ -351,7 +351,7 @@ working-directory = ~/code`}</CodeBlock>
         the stored default and still match digits <code>1</code> through <code>9</code>.
       </p>
       <p>
-        The defaults below are the same cmux-owned actions listed on the{" "}
+        The defaults below are the same CMUX+-owned actions listed on the{" "}
         <Link href="/docs/keyboard-shortcuts">keyboard shortcuts page</Link>.
       </p>
       {shortcutCategories.map((category) => (

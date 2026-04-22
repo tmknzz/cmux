@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: t("metaTitle"),
     description: t("metaDescription"),
     keywords: [
-      "cmux", "terminal", "macOS", "CLI", "composable",
+      "CMUX+", "terminal", "macOS", "CLI", "composable",
       "developer tools", "AI coding agents", "workflow",
     ],
     openGraph: {

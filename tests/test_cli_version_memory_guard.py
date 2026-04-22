@@ -19,7 +19,7 @@ import time
 JUNK_APP_COUNT = 40000
 RSS_LIMIT_KB = 64 * 1024
 TIMEOUT_SECONDS = 10.0
-EXPECTED_STDOUT = "cmux 9.9.9 (999)"
+EXPECTED_STDOUT = "cmuxplus 9.9.9 (999)"
 
 
 def resolve_cmux_cli() -> str:
@@ -28,18 +28,18 @@ def resolve_cmux_cli() -> str:
         return explicit
 
     candidates: list[str] = []
-    candidates.extend(glob.glob(os.path.expanduser("~/Library/Developer/Xcode/DerivedData/*/Build/Products/Debug/cmux")))
-    candidates.extend(glob.glob("/tmp/cmux-*/Build/Products/Debug/cmux"))
+    candidates.extend(glob.glob(os.path.expanduser("~/Library/Developer/Xcode/DerivedData/*/Build/Products/Debug/cmuxplus")))
+    candidates.extend(glob.glob("/tmp/cmux-*/Build/Products/Debug/cmuxplus"))
     candidates = [p for p in candidates if os.path.exists(p) and os.access(p, os.X_OK)]
     if candidates:
         candidates.sort(key=os.path.getmtime, reverse=True)
         return candidates[0]
 
-    in_path = shutil.which("cmux")
+    in_path = shutil.which("cmuxplus")
     if in_path:
         return in_path
 
-    raise RuntimeError("Unable to find cmux CLI binary. Set CMUX_CLI_BIN.")
+    raise RuntimeError("Unable to find cmuxplus CLI binary. Set CMUX_CLI_BIN.")
 
 
 def copy_runtime_frameworks(cli_path: str, fixture_contents: str) -> None:
@@ -64,19 +64,19 @@ def copy_runtime_frameworks(cli_path: str, fixture_contents: str) -> None:
 
 
 def build_fixture(root: str, cli_path: str) -> str:
-    app_path = os.path.join(root, "cmux.app")
+    app_path = os.path.join(root, "cmuxplus.app")
     contents_path = os.path.join(app_path, "Contents")
     resources_path = os.path.join(contents_path, "Resources")
     bin_path = os.path.join(resources_path, "bin")
     os.makedirs(bin_path, exist_ok=True)
 
-    fixture_cli = os.path.join(bin_path, "cmux")
+    fixture_cli = os.path.join(bin_path, "cmuxplus")
     shutil.copy2(cli_path, fixture_cli)
     copy_runtime_frameworks(cli_path, contents_path)
 
     info = {
-        "CFBundleExecutable": "cmux",
-        "CFBundleIdentifier": "test.cmux.version-memory-guard",
+        "CFBundleExecutable": "cmuxplus",
+        "CFBundleIdentifier": "test.cmuxplus.version-memory-guard",
         "CFBundlePackageType": "APPL",
         "CFBundleShortVersionString": "9.9.9",
         "CFBundleVersion": "999",

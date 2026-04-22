@@ -886,7 +886,7 @@ final class KeyboardShortcutSettingsFileStoreTests: XCTestCase {
         XCTAssertNil(store.override(for: .newTab))
 
         let contents = try String(contentsOf: settingsFileURL, encoding: .utf8)
-        XCTAssertTrue(contents.contains(#""$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json""#))
+        XCTAssertTrue(contents.contains(#""$schema": "https://raw.githubusercontent.com/tamekuniz/CMUX-Plus/main/web/data/cmuxplus-settings.schema.json""#))
         XCTAssertTrue(contents.contains(#""schemaVersion": 1,"#))
         XCTAssertTrue(contents.contains(#"//   "app" : {"#))
         XCTAssertTrue(contents.contains(#"//     "colors" : {"#))
@@ -1000,7 +1000,7 @@ final class KeyboardShortcutSettingsFileStoreTests: XCTestCase {
         try writeSettingsFile(
             """
             {
-              "$schema": "https://raw.githubusercontent.com/manaflow-ai/cmux/main/web/data/cmux-settings.schema.json",
+              "$schema": "https://raw.githubusercontent.com/tamekuniz/CMUX-Plus/main/web/data/cmuxplus-settings.schema.json",
               "schemaVersion": 1,
               // tmux-like prefix
               "shortcuts": {
@@ -3511,7 +3511,7 @@ final class WorkspacePanelGitBranchTests: XCTestCase {
         }
         defer { cancellable.cancel() }
 
-        let pullRequestURL = URL(string: "https://github.com/manaflow-ai/cmux/pull/2388")!
+        let pullRequestURL = URL(string: "https://github.com/tamekuniz/CMUX-Plus/pull/2388")!
         workspace.updatePanelPullRequest(
             panelId: panelId,
             number: 2388,
@@ -3608,7 +3608,7 @@ final class WorkspacePanelGitBranchTests: XCTestCase {
             panelId: secondPanel.id,
             number: 1629,
             label: "PR",
-            url: URL(string: "https://github.com/manaflow-ai/cmux/pull/1629")!,
+            url: URL(string: "https://github.com/tamekuniz/CMUX-Plus/pull/1629")!,
             status: .open
         )
 
@@ -3783,7 +3783,7 @@ final class WorkspacePanelGitBranchTests: XCTestCase {
             panelId: leftFirstPanelId,
             number: 101,
             label: "PR",
-            url: URL(string: "https://github.com/manaflow-ai/cmux/pull/101")!,
+            url: URL(string: "https://github.com/tamekuniz/CMUX-Plus/pull/101")!,
             status: .open
         )
         workspace.updatePanelPullRequest(

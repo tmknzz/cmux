@@ -1,11 +1,11 @@
 > 이 문서는 Claude가 번역했어요. 개선할 부분이 있다면 PR을 보내주세요.
 
-<h1 align="center">cmux</h1>
+<h1 align="center">CMUX+</h1>
 <p align="center">세로 탭과 알림을 지원하는 AI 코딩 에이전트용 Ghostty 기반 macOS 터미널</p>
 
 <p align="center">
-  <a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-    <img src="./docs/assets/macos-badge.png" alt="macOS용 cmux 다운로드" width="180" />
+  <a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+    <img src="./docs/assets/macos-badge.png" alt="macOS용 CMUX+ 다운로드" width="180" />
   </a>
 </p>
 
@@ -16,15 +16,15 @@
 <p align="center">
   <a href="https://x.com/manaflowai"><img src="https://img.shields.io/badge/@manaflow-555?logo=x" alt="X / Twitter" /></a>
   <a href="https://discord.gg/xsgFEVrWCZ"><img src="https://img.shields.io/badge/Discord-555?logo=discord" alt="Discord" /></a>
-  <a href="https://github.com/manaflow-ai/cmux"><img src="https://img.shields.io/github/stars/manaflow-ai/cmux?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
+  <a href="https://github.com/tamekuniz/CMUX-Plus"><img src="https://img.shields.io/github/stars/tamekuniz/CMUX-Plus?style=flat&logo=github&label=stars&color=4c71f2" alt="GitHub stars" /></a>
 </p>
 
 <p align="center">
-  <img src="./docs/assets/main-first-image.png" alt="cmux 스크린샷" width="900" />
+  <img src="./docs/assets/main-first-image.png" alt="CMUX+ 스크린샷" width="900" />
 </p>
 
 <p align="center">
-  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ 데모 영상</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of cmux</a>
+  <a href="https://www.youtube.com/watch?v=i-WxO5YUTOs">▶ 데모 영상</a> · <a href="https://cmux.com/blog/zen-of-cmux">The Zen of CMUX+</a>
 </p>
 
 ## 기능
@@ -69,16 +69,16 @@
 <tr>
 <td width="40%" valign="middle">
 <h3>SSH</h3>
-<code>cmux ssh user@remote</code>로 원격 머신용 워크스페이스를 생성해요. 브라우저 패널은 원격 네트워크를 통해 라우팅되어 localhost가 그대로 작동해요. 원격 세션에 이미지를 드래그하면 scp로 업로드돼요.
+<code>cmuxplus ssh user@remote</code>로 원격 머신용 워크스페이스를 생성해요. 브라우저 패널은 원격 네트워크를 통해 라우팅되어 localhost가 그대로 작동해요. 원격 세션에 이미지를 드래그하면 scp로 업로드돼요.
 </td>
 <td width="60%">
-<img src="./docs/assets/ssh.png" alt="cmux SSH" width="100%" />
+<img src="./docs/assets/ssh.png" alt="CMUX+ SSH" width="100%" />
 </td>
 </tr>
 <tr>
 <td width="40%" valign="middle">
 <h3>Claude Code Teams</h3>
-<code>cmux claude-teams</code>로 Claude Code의 팀원 모드를 한 명령어로 실행해요. 팀원은 네이티브 분할로 생성되며 사이드바에 메타데이터와 알림이 표시돼요. tmux가 필요 없어요.
+<code>cmuxplus claude-teams</code>로 Claude Code의 팀원 모드를 한 명령어로 실행해요. 팀원은 네이티브 분할로 생성되며 사이드바에 메타데이터와 알림이 표시돼요. tmux가 필요 없어요.
 </td>
 <td width="60%">
 <img src="./docs/assets/claude-code-teams.png" alt="Claude Code Teams" width="100%" />
@@ -97,8 +97,8 @@
 
 ### DMG (권장)
 
-<a href="https://github.com/manaflow-ai/cmux/releases/latest/download/cmux-macos.dmg">
-  <img src="./docs/assets/macos-badge.png" alt="macOS용 cmux 다운로드" width="180" />
+<a href="https://github.com/tamekuniz/CMUX-Plus/releases/latest/download/cmuxplus-macos.dmg">
+  <img src="./docs/assets/macos-badge.png" alt="macOS용 CMUX+ 다운로드" width="180" />
 </a>
 
 `.dmg` 파일을 열고 cmux를 응용 프로그램 폴더로 드래그하면 돼요. Sparkle을 통해 자동 업데이트되니 한 번만 다운로드하면 돼요.
@@ -106,14 +106,14 @@
 ### Homebrew
 
 ```bash
-brew tap manaflow-ai/cmux
-brew install --cask cmux
+brew tap tamekuniz/cmuxplus
+brew install --cask tamekuniz/cmuxplus/cmuxplus
 ```
 
 나중에 업데이트하려면 아래 명령어를 실행해주세요:
 
 ```bash
-brew upgrade --cask cmux
+brew upgrade --cask cmuxplus
 ```
 
 처음 실행할 때 macOS에서 개발자 확인 팝업이 뜰 수 있어요. **열기**를 클릭하면 돼요.
@@ -124,13 +124,13 @@ brew upgrade --cask cmux
 
 여러 코딩 오케스트레이터를 써봤는데, 대부분 Electron/Tauri 앱이라 성능이 별로였어요. GUI 오케스트레이터는 특정 워크플로우에 갇히게 돼서 터미널이 더 낫다고 생각했고요. 그래서 Swift/AppKit으로 네이티브 macOS 앱인 cmux를 직접 만들었어요. 터미널 렌더링에는 libghostty를 쓰고, 기존 Ghostty 설정에서 테마, 글꼴, 색상을 그대로 가져와요.
 
-핵심은 사이드바와 알림 시스템이에요. 사이드바에는 각 워크스페이스의 git 브랜치, 연결된 PR 상태/번호, 작업 디렉토리, 수신 포트, 최근 알림 텍스트를 보여주는 세로 탭이 있어요. 알림 시스템은 터미널 시퀀스(OSC 9/99/777)를 감지하고, Claude Code나 OpenCode 같은 에이전트 훅에 연결할 수 있는 CLI(`cmux notify`)를 제공해요. 에이전트가 대기 중이면 해당 패널에 파란색 링이 뜨고 사이드바 탭이 강조되니까, 여러 패널과 탭 중에서 어디서 입력을 기다리는지 바로 알 수 있어요. ⌘⇧U를 누르면 가장 최근 읽지 않은 알림으로 이동해요.
+핵심은 사이드바와 알림 시스템이에요. 사이드바에는 각 워크스페이스의 git 브랜치, 연결된 PR 상태/번호, 작업 디렉토리, 수신 포트, 최근 알림 텍스트를 보여주는 세로 탭이 있어요. 알림 시스템은 터미널 시퀀스(OSC 9/99/777)를 감지하고, Claude Code나 OpenCode 같은 에이전트 훅에 연결할 수 있는 CLI(`cmuxplus notify`)를 제공해요. 에이전트가 대기 중이면 해당 패널에 파란색 링이 뜨고 사이드바 탭이 강조되니까, 여러 패널과 탭 중에서 어디서 입력을 기다리는지 바로 알 수 있어요. ⌘⇧U를 누르면 가장 최근 읽지 않은 알림으로 이동해요.
 
 내장 브라우저는 [agent-browser](https://github.com/vercel-labs/agent-browser)에서 포팅한 스크립팅 API를 제공해요. 에이전트가 접근성 트리 스냅샷을 가져오고, 요소를 참조·클릭하고, 양식을 채우고, JS를 실행할 수 있어요. 터미널 옆에 브라우저 패널을 띄워서 Claude Code가 개발 서버와 직접 상호작용하게 할 수 있어요.
 
 CLI와 socket API로 모든 걸 자동화할 수 있어요 — 워크스페이스/탭 생성, 패널 분할, 키 입력 전송, 브라우저에서 URL 열기까지요.
 
-## The Zen of cmux
+## The Zen of CMUX+
 
 cmux는 개발자가 도구를 어떻게 사용해야 하는지 규정하지 않아요. 터미널과 브라우저에 CLI가 있고, 나머지는 여러분의 몫이에요.
 
@@ -142,7 +142,7 @@ cmux는 솔루션이 아니라 프리미티브예요. 터미널, 브라우저, �
 
 ## 문서
 
-cmux 설정 방법에 대한 자세한 내용은 [문서를 확인해주세요](https://cmux.com/docs/getting-started?utm_source=readme).
+CMUX+ 설정 방법에 대한 자세한 내용은 [문서를 확인해주세요](https://cmux.com/docs/getting-started?utm_source=readme).
 
 ## 키보드 단축키
 
@@ -232,9 +232,9 @@ cmux 설정 방법에 대한 자세한 내용은 [문서를 확인해주세요](
 
 ## 나이틀리 빌드
 
-[cmux NIGHTLY 다운로드](https://github.com/manaflow-ai/cmux/releases/download/nightly/cmux-nightly-macos.dmg)
+[CMUX+ NIGHTLY 다운로드](https://github.com/tamekuniz/CMUX-Plus/releases/download/nightly/cmuxplus-nightly-macos.dmg)
 
-cmux NIGHTLY는 자체 번들 ID를 가진 별도의 앱이라 안정 버전과 함께 실행할 수 있어요. 최신 `main` 커밋에서 자동으로 빌드되고, 자체 Sparkle 피드를 통해 자동 업데이트돼요.
+CMUX+ NIGHTLY는 자체 번들 ID를 가진 별도의 앱이라 안정 버전과 함께 실행할 수 있어요. 최신 `main` 커밋에서 자동으로 빌드되고, 자체 Sparkle 피드를 통해 자동 업데이트돼요.
 
 ## 세션 복원 (현재 동작)
 
@@ -248,11 +248,11 @@ cmux는 터미널 앱 내부의 라이브 프로세스 상태를 복원하지 **
 
 ## Star History
 
-<a href="https://star-history.com/#manaflow-ai/cmux&Date">
+<a href="https://star-history.com/#tamekuniz/CMUX-Plus&Date">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=manaflow-ai/cmux&type=Date" width="600" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=tamekuniz/CMUX-Plus&type=Date" width="600" />
  </picture>
 </a>
 
@@ -262,13 +262,13 @@ cmux는 터미널 앱 내부의 라이브 프로세스 상태를 복원하지 **
 
 - X에서 팔로우해주세요: [@manaflowai](https://x.com/manaflowai), [@lawrencecchen](https://x.com/lawrencecchen), [@austinywang](https://x.com/austinywang)
 - [Discord](https://discord.gg/xsgFEVrWCZ)에서 대화에 참여해주세요
-- [GitHub Issues](https://github.com/manaflow-ai/cmux/issues)와 [토론](https://github.com/manaflow-ai/cmux/discussions)에 참여해주세요
+- [GitHub Issues](https://github.com/tamekuniz/CMUX-Plus/issues)와 [토론](https://github.com/tamekuniz/CMUX-Plus/discussions)에 참여해주세요
 - cmux로 무엇을 만들고 있는지 알려주세요
 
 ## 커뮤니티
 
 - [Discord](https://discord.gg/xsgFEVrWCZ)
-- [GitHub](https://github.com/manaflow-ai/cmux)
+- [GitHub](https://github.com/tamekuniz/CMUX-Plus)
 - [X / Twitter](https://twitter.com/manaflowai)
 - [YouTube](https://www.youtube.com/channel/UCAa89_j-TWkrXfk9A3CbASw)
 - [LinkedIn](https://www.linkedin.com/company/manaflow-ai/)
@@ -281,7 +281,7 @@ cmux는 무료이고 오픈 소스이며, 앞으로도 그럴 거예요. 개발�
 **[Founder's Edition 구매하기](https://buy.stripe.com/3cI00j2Ld0it5OU33r5EY0q)**
 
 - **기능 요청/버그 수정 우선 처리**
-- **얼리 액세스: 모든 워크스페이스, 탭, 패널의 컨텍스트를 제공하는 cmux AI**
+- **얼리 액세스: 모든 워크스페이스, 탭, 패널의 컨텍스트를 제공하는 CMUX+ AI**
 - **얼리 액세스: 데스크톱과 휴대폰 간 터미널을 동기화하는 iOS 앱**
 - **얼리 액세스: 클라우드 VM**
 - **얼리 액세스: 음성 모드**

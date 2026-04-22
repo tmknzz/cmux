@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to cmux are documented here.
+All notable changes to CMUX+ are documented here.
 
 ## [Unreleased]
 

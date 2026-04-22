@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="cmux STAGING"
-BUNDLE_ID="com.cmuxterm.app.staging"
-BASE_APP_NAME="cmux"
+APP_NAME="cmuxplus STAGING"
+BUNDLE_ID="com.cmuxplus.app.staging"
+BASE_APP_NAME="cmuxplus"
 DERIVED_DATA=""
 NAME_SET=0
 BUNDLE_SET=0
 DERIVED_SET=0
 TAG=""
-LAST_SOCKET_PATH_DIR="$HOME/Library/Application Support/cmux"
+LAST_SOCKET_PATH_DIR="$HOME/Library/Application Support/cmuxplus"
 LAST_SOCKET_PATH_FILE="${LAST_SOCKET_PATH_DIR}/last-socket-path"
 
 write_last_socket_path() {
@@ -23,8 +23,8 @@ usage() {
   cat <<'EOF'
 Usage: ./scripts/reloads.sh [options]
 
-Release build with isolated "cmux STAGING" identity. Runs side-by-side with
-the production cmux app.
+Release build with isolated "cmuxplus STAGING" identity. Runs side-by-side with
+the production cmuxplus app.
 
 Options:
   --tag <name>           Short tag for parallel builds (e.g., feature-xyz-lol).
@@ -109,10 +109,10 @@ if [[ -n "$TAG" ]]; then
   TAG_ID="$(sanitize_bundle "$TAG")"
   TAG_SLUG="$(sanitize_path "$TAG")"
   if [[ "$NAME_SET" -eq 0 ]]; then
-    APP_NAME="cmux STAGING ${TAG}"
+    APP_NAME="cmuxplus STAGING ${TAG}"
   fi
   if [[ "$BUNDLE_SET" -eq 0 ]]; then
-    BUNDLE_ID="com.cmuxterm.app.staging.${TAG_ID}"
+    BUNDLE_ID="com.cmuxplus.app.staging.${TAG_ID}"
   fi
   if [[ "$DERIVED_SET" -eq 0 ]]; then
     DERIVED_DATA="/tmp/cmux-staging-${TAG_SLUG}"
@@ -197,7 +197,7 @@ if [[ -f "$INFO_PLIST" ]]; then
   # Inject staging socket paths via LSEnvironment so the Release binary
   # (which defaults to the per-user stable socket) uses isolated sockets instead.
   STAGING_SLUG="${TAG_SLUG:-staging}"
-  APP_SUPPORT_DIR="$HOME/Library/Application Support/cmux"
+  APP_SUPPORT_DIR="$HOME/Library/Application Support/cmuxplus"
   CMUXD_SOCKET="${APP_SUPPORT_DIR}/cmuxd-${STAGING_SLUG}.sock"
   CMUX_SOCKET="/tmp/cmux-${STAGING_SLUG}.sock"
   write_last_socket_path "$CMUX_SOCKET"

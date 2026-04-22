@@ -21,9 +21,9 @@ export default function OhMyCodexPage() {
       <p>{t("intro")}</p>
 
       <h2>{t("usage")}</h2>
-      <CodeBlock lang="bash">{`cmux omx
-cmux omx --madmax --high
-cmux omx team`}</CodeBlock>
+      <CodeBlock lang="bash">{`cmuxplus omx
+cmuxplus omx --madmax --high
+cmuxplus omx team`}</CodeBlock>
       <p>{t("usageDesc")}</p>
 
       <h2>{t("whatYouGet")}</h2>

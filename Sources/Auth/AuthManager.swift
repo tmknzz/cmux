@@ -89,7 +89,7 @@ extension AuthClientProtocol {
 }
 
 enum AuthKeychainServiceName {
-    static let stableFallback = "com.cmuxterm.app.auth"
+    static let stableFallback = "com.cmuxplus.app.auth"
 
     static func make(bundleIdentifier: String? = Bundle.main.bundleIdentifier) -> String {
         guard let bundleIdentifier, !bundleIdentifier.isEmpty else {
@@ -105,7 +105,7 @@ final class AuthManager: ObservableObject {
 
     private static func defaultTokenStore() -> any StackAuthTokenStoreProtocol {
         // Release builds include a keychain-access-groups entitlement (via
-        // Resources/cmux.entitlements) and go through the data-protection
+        // Resources/cmuxplus.entitlements) and go through the data-protection
         // keychain. Debug ad-hoc builds can't carry that entitlement
         // without a provisioning profile, so Keychain writes fail with
         // errSecMissingEntitlement and the file store takes over. The
@@ -694,7 +694,7 @@ final class AuthManager: ObservableObject {
             guard let id = Bundle(url: appURL)?.bundleIdentifier else { return true }
             if ownBundleIDs.contains(id) { return false }
             let lower = id.lowercased()
-            return !lower.hasPrefix("dev.cmux.") && !lower.hasPrefix("com.cmuxterm.")
+            return !lower.hasPrefix("dev.cmux.") && !lower.hasPrefix("com.cmuxplus.")
         }
         let config = NSWorkspace.OpenConfiguration()
         config.createsNewApplicationInstance = false

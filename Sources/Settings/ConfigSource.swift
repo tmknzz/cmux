@@ -17,7 +17,7 @@ struct ConfigSourceEnvironment {
             ?? standardizedHome
                 .appendingPathComponent("Library", isDirectory: true)
                 .appendingPathComponent("Application Support", isDirectory: true)
-                .appendingPathComponent("com.cmuxterm.app", isDirectory: true)
+                .appendingPathComponent("com.cmuxplus.app", isDirectory: true)
     }
 
     static func live(fileManager: FileManager = .default) -> Self {
@@ -25,7 +25,7 @@ struct ConfigSourceEnvironment {
     }
 
     var cmuxConfigURL: URL {
-        applicationSupportDirectoryURL(forBundleIdentifier: "com.cmuxterm.app")
+        applicationSupportDirectoryURL(forBundleIdentifier: "com.cmuxplus.app")
             .appendingPathComponent("config", isDirectory: false)
     }
 

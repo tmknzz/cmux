@@ -26,7 +26,7 @@ When invoked as `cmux` (via wrapper/symlink installed during bootstrap), the bin
 12. `session.detach`
 13. `session.status`
 
-Current integration in cmux:
+Current integration in CMUX+:
 1. `workspace.remote.configure` now bootstraps this binary over SSH when missing.
 2. Client sends `hello` before enabling remote proxy transport.
 3. Local workspace proxy broker serves SOCKS5 + HTTP CONNECT and tunnels stream traffic through `proxy.*` RPC over `serve --stdio`, using daemon-pushed stream events instead of polling reads.
@@ -61,12 +61,12 @@ The command prints the exact release asset URL, expected SHA-256, local cache st
 
 ## CLI relay
 
-The `cli` subcommand (or `cmux` wrapper/symlink) connects to the local cmux app through an SSH reverse forward and relays commands. It supports both v1 text protocol and v2 JSON-RPC commands.
+The `cli` subcommand (or `cmux` wrapper/symlink) connects to the local CMUX+ app through an SSH reverse forward and relays commands. It supports both v1 text protocol and v2 JSON-RPC commands.
 
 Socket discovery order:
 1. `--socket <path>` flag
 2. `CMUX_SOCKET_PATH` environment variable
-3. `~/.cmux/socket_addr` file (written by the app after the reverse relay establishes)
+3. `~/.cmux/socket_addr` file (written by the CMUX+ app after the reverse relay establishes)
 
 For TCP addresses, the CLI dials once and only refreshes `~/.cmux/socket_addr` a single time if the first address was stale. Relay metadata is published only after the reverse forward is ready, so steady-state use does not rely on polling.
 
@@ -79,5 +79,5 @@ Integration additions for the relay path:
 
 1. Bootstrap installs `~/.cmux/bin/cmux` wrapper and keeps a default daemon target (`~/.cmux/bin/cmuxd-remote-current`).
 2. A background `ssh -N -R` process reverse-forwards a TCP port to the authenticated local relay server. The relay address is written to `~/.cmux/socket_addr` on the remote.
-3. Relay startup writes `~/.cmux/relay/<port>.daemon_path` so the wrapper can route each shell to the correct daemon binary when multiple local cmux instances or versions coexist.
+3. Relay startup writes `~/.cmux/relay/<port>.daemon_path` so the wrapper can route each shell to the correct daemon binary when multiple local CMUX+ instances or versions coexist.
 4. Relay startup writes `~/.cmux/relay/<port>.auth` with the relay ID and token needed for HMAC authentication.

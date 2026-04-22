@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: t("metaTitle"),
     description: t("metaDescription"),
     keywords: [
-      "cmux", "terminal", "macOS", "Ghostty", "libghostty",
+      "CMUX+", "terminal", "macOS", "Ghostty", "libghostty",
       "AI coding agents", "Claude Code", "vertical tabs", "split panes", "socket API",
     ],
     openGraph: {

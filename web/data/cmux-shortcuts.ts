@@ -28,7 +28,7 @@ export const shortcutCategories: ShortcutCategory[] = [
       {
         id: "showHideAllWindows",
         combos: [["⌃", "⌥", "⌘", "."]],
-        description: { en: "Show/hide all cmux windows", ja: "すべてのcmuxウインドウを表示/非表示" },
+        description: { en: "Show/hide all CMUX+ windows", ja: "すべてのCMUX+ウインドウを表示/非表示" },
         note: { en: "system-wide hotkey", ja: "システム全体のホットキー" },
       },
       { id: "commandPalette", combos: [["⌘", "⇧", "P"]], description: { en: "Command palette", ja: "コマンドパレット" } },
@@ -36,7 +36,7 @@ export const shortcutCategories: ShortcutCategory[] = [
       { id: "closeWindow", combos: [["⌃", "⌘", "W"]], description: { en: "Close window", ja: "ウインドウを閉じる" } },
       { id: "toggleFullScreen", combos: [["⌃", "⌘", "F"]], description: { en: "Toggle full screen", ja: "フルスクリーンを切り替え" } },
       { id: "sendFeedback", combos: [["⌥", "⌘", "F"]], description: { en: "Send feedback", ja: "フィードバックを送信" } },
-      { id: "quit", combos: [["⌘", "Q"]], description: { en: "Quit cmux", ja: "cmuxを終了" } },
+      { id: "quit", combos: [["⌘", "Q"]], description: { en: "Quit CMUX+", ja: "CMUX+を終了" } },
     ],
   },
   {
