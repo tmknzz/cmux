@@ -843,7 +843,14 @@ final class CmuxSettingsFileStore {
         }
 
         guard let shortcut else { return nil }
-        if let normalized = action.normalizedRecordedShortcut(shortcut) {
+        // Use the conflict-free normalizer here. The conflict-checking variant
+        // calls back into `KeyboardShortcutSettings.shortcut(for:)`, which
+        // touches `settingsFileStore` — and we are still inside that store's
+        // `dispatch_once` initializer at this point, so re-entering it
+        // deadlocks libdispatch ("trying to lock recursively"). Cross-action
+        // conflicts surfaced from settings.json are reported through the
+        // normal recording path the next time the user edits a binding.
+        if case let .accepted(normalized) = action.resolvedRecordedShortcutIgnoringConflicts(shortcut) {
             return normalized
         }
         return action.usesNumberedDigitMatching ? nil : shortcut
