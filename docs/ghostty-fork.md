@@ -221,6 +221,18 @@ archive checksum in `scripts/ghosttykit-checksums.txt`. The release and checksum
 pin must be regenerated whenever this commit changes, even for comment-only
 amends, because the release tag is keyed by the Ghostty commit SHA.
 
+### 13) Per-surface foreground override C API
+
+- Commit: pending (cycle 6 of cmux active-pane-affordance branch — submodule SHA gets bumped in the parent repo as part of this work)
+- Files:
+  - `include/ghostty.h`
+  - `src/apprt/embedded.zig`
+  - `src/Surface.zig`
+- Summary:
+  - Adds `ghostty_surface_set_foreground_override(surface, r, g, b, clear)` to drive the per-surface text color from the host (cmux Pane Appearance "Border + Foreground color" mode).
+  - Internally it locks `renderer_state.mutex` and calls the same `terminal.colors.foreground.set` / `.reset` path the OSC 10 handler uses, so the existing renderer pickup keeps working.
+  - The new API is opt-in: existing surface creation / config paths are unchanged, and downstream apps that never call it see no behavior difference.
+
 ## Upstreamed fork changes
 
 ### cursor-click-to-move respects OSC 133 click-to-move
