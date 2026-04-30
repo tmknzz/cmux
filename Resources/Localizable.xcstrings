@@ -117086,6 +117086,40 @@
         }
       }
     },
+    "shortcut.focusNextPane.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus Next Pane"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "次のペインにフォーカス"
+          }
+        }
+      }
+    },
+    "shortcut.focusPreviousPane.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus Previous Pane"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前のペインにフォーカス"
+          }
+        }
+      }
+    },
     "shortcut.focusPaneLeft.label": {
       "extractionState": "manual",
       "localizations": {

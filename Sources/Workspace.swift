@@ -15295,6 +15295,28 @@ final class Workspace: Identifiable, ObservableObject {
 
     }
 
+    func cyclePaneFocus(forward: Bool) {
+        let paneIds = bonsplitController.allPaneIds
+        guard paneIds.count > 1,
+              let currentId = bonsplitController.focusedPaneId,
+              let currentIndex = paneIds.firstIndex(of: currentId) else { return }
+
+        let nextIndex = forward
+            ? (currentIndex + 1) % paneIds.count
+            : (currentIndex - 1 + paneIds.count) % paneIds.count
+        let nextId = paneIds[nextIndex]
+
+        if let prevPanelId = focusedPanelId, let prev = panels[prevPanelId] {
+            prev.unfocus()
+        }
+
+        bonsplitController.focusPane(nextId)
+
+        if let tabId = bonsplitController.selectedTab(inPane: nextId)?.id {
+            applyTabSelection(tabId: tabId, inPane: nextId)
+        }
+    }
+
     // MARK: - Surface Navigation
 
     /// Select the next surface in the currently focused pane

@@ -12876,6 +12876,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 #endif
             return true
         }
+        if matchConfiguredShortcut(event: event, action: .focusNextPane) {
+            tabManager?.cyclePaneFocus(forward: true)
+            return true
+        }
+        if matchConfiguredShortcut(event: event, action: .focusPreviousPane) {
+            tabManager?.cyclePaneFocus(forward: false)
+            return true
+        }
 
         if matchConfiguredShortcut(event: event, action: .toggleSplitZoom) {
             let routedManager = preferredMainWindowContextForShortcutRouting(event: event)?.tabManager ?? tabManager
@@ -12928,16 +12936,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             cmuxDebugLog("shortcut.action name=splitBrowserDown \(debugShortcutRouteSnapshot(event: event))")
 #endif
             _ = performBrowserSplitShortcut(direction: .down)
-            return true
-        }
-
-        // Surface navigation (legacy Ctrl+Tab support)
-        if matchTabShortcut(event: event, shortcut: StoredShortcut(key: "\t", command: false, shift: false, option: false, control: true)) {
-            tabManager?.selectNextSurface()
-            return true
-        }
-        if matchTabShortcut(event: event, shortcut: StoredShortcut(key: "\t", command: false, shift: true, option: false, control: true)) {
-            tabManager?.selectPreviousSurface()
             return true
         }
 
