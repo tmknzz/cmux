@@ -16,6 +16,10 @@ struct TerminalPanelView: View {
     private var paneAffordanceActiveBackgroundHex = PaneAffordanceSettings.defaultActiveBackgroundColorHex
     @AppStorage(PaneAffordanceSettings.inactiveBackgroundColorHexKey)
     private var paneAffordanceInactiveBackgroundHex = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+    @AppStorage(PaneAffordanceSettings.activeForegroundColorHexKey)
+    private var paneAffordanceActiveForegroundHex = PaneAffordanceSettings.defaultActiveForegroundColorHex
+    @AppStorage(PaneAffordanceSettings.inactiveForegroundColorHexKey)
+    private var paneAffordanceInactiveForegroundHex = PaneAffordanceSettings.defaultInactiveForegroundColorHex
     let paneId: PaneID
     let isFocused: Bool
     let isVisibleInUI: Bool
@@ -42,6 +46,8 @@ struct TerminalPanelView: View {
             paneAffordanceModeRaw: isSplit ? paneAffordanceModeRaw : PaneAffordanceMode.off.rawValue,
             paneAffordanceActiveBackgroundHex: paneAffordanceActiveBackgroundHex,
             paneAffordanceInactiveBackgroundHex: paneAffordanceInactiveBackgroundHex,
+            paneAffordanceActiveForegroundHex: paneAffordanceActiveForegroundHex,
+            paneAffordanceInactiveForegroundHex: paneAffordanceInactiveForegroundHex,
             inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
             inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
             searchState: panel.searchState,

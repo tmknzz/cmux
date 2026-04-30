@@ -10357,6 +10357,43 @@ final class GhosttySurfaceScrollView: NSView {
         }
     }
 
+    func setActiveForegroundOverride(
+        modeRaw: String,
+        isActive: Bool,
+        activeColorHex: String,
+        inactiveColorHex: String
+    ) {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.setActiveForegroundOverride(
+                    modeRaw: modeRaw,
+                    isActive: isActive,
+                    activeColorHex: activeColorHex,
+                    inactiveColorHex: inactiveColorHex
+                )
+            }
+            return
+        }
+
+        guard let surface = surfaceView.terminalSurface?.surface else { return }
+        let mode = PaneAffordanceMode(rawValue: modeRaw) ?? PaneAffordanceSettings.defaultMode
+        guard mode == .borderAndForeground else {
+            ghostty_surface_set_foreground_override(surface, 0, 0, 0, true)
+            return
+        }
+
+        let hex = isActive ? activeColorHex : inactiveColorHex
+        let fallback = isActive
+            ? PaneAffordanceSettings.defaultActiveForegroundColorHex
+            : PaneAffordanceSettings.defaultInactiveForegroundColorHex
+        let baseColor = NSColor(hex: hex) ?? NSColor(hex: fallback) ?? NSColor.white
+        let sRGB = baseColor.usingColorSpace(.sRGB) ?? baseColor
+        let r = UInt8(clamping: Int((sRGB.redComponent * 255).rounded()))
+        let g = UInt8(clamping: Int((sRGB.greenComponent * 255).rounded()))
+        let b = UInt8(clamping: Int((sRGB.blueComponent * 255).rounded()))
+        ghostty_surface_set_foreground_override(surface, r, g, b, false)
+    }
+
     private func cancelDeferredSearchOverlayMutation() {
         deferredSearchOverlayMutationWorkItem?.cancel()
         deferredSearchOverlayMutationWorkItem = nil
@@ -12883,6 +12920,8 @@ struct GhosttyTerminalView: NSViewRepresentable {
     var paneAffordanceModeRaw: String = PaneAffordanceSettings.defaultMode.rawValue
     var paneAffordanceActiveBackgroundHex: String = PaneAffordanceSettings.defaultActiveBackgroundColorHex
     var paneAffordanceInactiveBackgroundHex: String = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+    var paneAffordanceActiveForegroundHex: String = PaneAffordanceSettings.defaultActiveForegroundColorHex
+    var paneAffordanceInactiveForegroundHex: String = PaneAffordanceSettings.defaultInactiveForegroundColorHex
     var inactiveOverlayColor: NSColor = .clear
     var inactiveOverlayOpacity: Double = 0
     var searchState: TerminalSurface.SearchState? = nil
@@ -12971,6 +13010,8 @@ struct GhosttyTerminalView: NSViewRepresentable {
         var desiredPaneAffordanceModeRaw: String = PaneAffordanceSettings.defaultMode.rawValue
         var desiredPaneAffordanceActiveBackgroundHex: String = PaneAffordanceSettings.defaultActiveBackgroundColorHex
         var desiredPaneAffordanceInactiveBackgroundHex: String = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+        var desiredPaneAffordanceActiveForegroundHex: String = PaneAffordanceSettings.defaultActiveForegroundColorHex
+        var desiredPaneAffordanceInactiveForegroundHex: String = PaneAffordanceSettings.defaultInactiveForegroundColorHex
         var desiredPortalZPriority: Int = 0
         var lastBoundHostId: ObjectIdentifier?
         var lastPaneDropZone: DropZone?
@@ -13051,6 +13092,8 @@ struct GhosttyTerminalView: NSViewRepresentable {
         coordinator.desiredPaneAffordanceModeRaw = paneAffordanceModeRaw
         coordinator.desiredPaneAffordanceActiveBackgroundHex = paneAffordanceActiveBackgroundHex
         coordinator.desiredPaneAffordanceInactiveBackgroundHex = paneAffordanceInactiveBackgroundHex
+        coordinator.desiredPaneAffordanceActiveForegroundHex = paneAffordanceActiveForegroundHex
+        coordinator.desiredPaneAffordanceInactiveForegroundHex = paneAffordanceInactiveForegroundHex
         coordinator.desiredPortalZPriority = portalZPriority
         coordinator.hostedView = hostedView
 #if DEBUG
@@ -13104,6 +13147,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
                 isActive: isActive,
                 activeColorHex: paneAffordanceActiveBackgroundHex,
                 inactiveColorHex: paneAffordanceInactiveBackgroundHex
+            )
+            hostedView.setActiveForegroundOverride(
+                modeRaw: paneAffordanceModeRaw,
+                isActive: isActive,
+                activeColorHex: paneAffordanceActiveForegroundHex,
+                inactiveColorHex: paneAffordanceInactiveForegroundHex
             )
             hostedView.setSearchOverlay(searchState: searchState)
             hostedView.syncKeyStateIndicator(text: terminalSurface.currentKeyStateIndicatorText)
@@ -13180,6 +13229,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
                     activeColorHex: coordinator.desiredPaneAffordanceActiveBackgroundHex,
                     inactiveColorHex: coordinator.desiredPaneAffordanceInactiveBackgroundHex
                 )
+                hostedView.setActiveForegroundOverride(
+                    modeRaw: coordinator.desiredPaneAffordanceModeRaw,
+                    isActive: coordinator.desiredIsActive,
+                    activeColorHex: coordinator.desiredPaneAffordanceActiveForegroundHex,
+                    inactiveColorHex: coordinator.desiredPaneAffordanceInactiveForegroundHex
+                )
             }
             host.onGeometryChanged = { [weak host, weak hostedView, weak coordinator] in
                 guard let host, let hostedView, let coordinator else { return }
@@ -13225,6 +13280,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
                         isActive: coordinator.desiredIsActive,
                         activeColorHex: coordinator.desiredPaneAffordanceActiveBackgroundHex,
                         inactiveColorHex: coordinator.desiredPaneAffordanceInactiveBackgroundHex
+                    )
+                    hostedView.setActiveForegroundOverride(
+                        modeRaw: coordinator.desiredPaneAffordanceModeRaw,
+                        isActive: coordinator.desiredIsActive,
+                        activeColorHex: coordinator.desiredPaneAffordanceActiveForegroundHex,
+                        inactiveColorHex: coordinator.desiredPaneAffordanceInactiveForegroundHex
                     )
                 }
                 Self.synchronizePortalGeometry(
@@ -13333,6 +13394,8 @@ struct GhosttyTerminalView: NSViewRepresentable {
         coordinator.desiredPaneAffordanceModeRaw = PaneAffordanceSettings.defaultMode.rawValue
         coordinator.desiredPaneAffordanceActiveBackgroundHex = PaneAffordanceSettings.defaultActiveBackgroundColorHex
         coordinator.desiredPaneAffordanceInactiveBackgroundHex = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+        coordinator.desiredPaneAffordanceActiveForegroundHex = PaneAffordanceSettings.defaultActiveForegroundColorHex
+        coordinator.desiredPaneAffordanceInactiveForegroundHex = PaneAffordanceSettings.defaultInactiveForegroundColorHex
         coordinator.desiredPortalZPriority = 0
         coordinator.lastBoundHostId = nil
         let hostedView = coordinator.hostedView

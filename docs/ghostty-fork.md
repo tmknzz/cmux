@@ -141,6 +141,18 @@ tend to conflict together during rebases.
   - Adds a C API for loading Ghostty config from an in-memory string.
   - Lets cmux parse generated or override config without materializing a separate config file first.
 
+### 10) Per-surface foreground override C API
+
+- Commit: pending (cycle 6 of cmux active-pane-affordance branch — submodule SHA gets bumped in the parent repo as part of this work)
+- Files:
+  - `include/ghostty.h`
+  - `src/apprt/embedded.zig`
+  - `src/Surface.zig`
+- Summary:
+  - Adds `ghostty_surface_set_foreground_override(surface, r, g, b, clear)` to drive the per-surface text color from the host (cmux Pane Appearance "Border + Foreground color" mode).
+  - Internally it locks `renderer_state.mutex` and calls the same `terminal.colors.foreground.set` / `.reset` path the OSC 10 handler uses, so the existing renderer pickup keeps working.
+  - The new API is opt-in: existing surface creation / config paths are unchanged, and downstream apps that never call it see no behavior difference.
+
 The current cmux pin is the head listed above. It is reachable from the
 `manaflow-ai/ghostty` fork `main` branch and has a matching prebuilt release
 tag `xcframework-04ec69173f8f5ac5a2568afca0faf8e4a74b2dc2`.
