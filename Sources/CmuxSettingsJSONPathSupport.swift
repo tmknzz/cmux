@@ -153,6 +153,12 @@ extension CmuxSettingsFileStore {
         "browser.insecureHttpHostsAllowedInEmbeddedBrowser",
         "browser.showImportHintOnBlankTabs",
         "browser.reactGrabVersion",
+        "paneAppearance.mode",
+        "paneAppearance.borderColor",
+        "paneAppearance.activeBackgroundColor",
+        "paneAppearance.inactiveBackgroundColor",
+        "paneAppearance.activeForegroundColor",
+        "paneAppearance.inactiveForegroundColor",
         "shortcuts.bindings",
     ]
 }
