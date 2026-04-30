@@ -5319,6 +5319,18 @@ struct SettingsView: View {
     @AppStorage(NotificationBadgeSettings.dockBadgeEnabledKey) private var notificationDockBadgeEnabled = NotificationBadgeSettings.defaultDockBadgeEnabled
     @AppStorage(NotificationPaneRingSettings.enabledKey) private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
     @AppStorage(NotificationPaneFlashSettings.enabledKey) private var notificationPaneFlashEnabled = NotificationPaneFlashSettings.defaultEnabled
+    @AppStorage(PaneAffordanceSettings.modeKey)
+    private var paneAffordanceModeRaw = PaneAffordanceSettings.defaultMode.rawValue
+    @AppStorage(PaneFocusBorderSettings.colorHexKey)
+    private var paneAffordanceBorderColorHex = PaneFocusBorderSettings.defaultColorHex
+    @AppStorage(PaneAffordanceSettings.activeBackgroundColorHexKey)
+    private var paneAffordanceActiveBackgroundHex = PaneAffordanceSettings.defaultActiveBackgroundColorHex
+    @AppStorage(PaneAffordanceSettings.inactiveBackgroundColorHexKey)
+    private var paneAffordanceInactiveBackgroundHex = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+    @AppStorage(PaneAffordanceSettings.activeForegroundColorHexKey)
+    private var paneAffordanceActiveForegroundHex = PaneAffordanceSettings.defaultActiveForegroundColorHex
+    @AppStorage(PaneAffordanceSettings.inactiveForegroundColorHexKey)
+    private var paneAffordanceInactiveForegroundHex = PaneAffordanceSettings.defaultInactiveForegroundColorHex
     @AppStorage(MenuBarExtraSettings.showInMenuBarKey) private var showMenuBarExtra = MenuBarExtraSettings.defaultShowInMenuBar
     @AppStorage(MenuBarOnlySettings.menuBarOnlyKey) private var menuBarOnly = MenuBarOnlySettings.defaultMenuBarOnly
     @AppStorage(QuitWarningSettings.warnBeforeQuitKey) private var warnBeforeQuitShortcut = QuitWarningSettings.defaultWarnBeforeQuit
@@ -6137,6 +6149,123 @@ struct SettingsView: View {
                                 .accessibilityLabel(
                                     String(localized: "settings.notifications.paneFlash.title", defaultValue: "Pane Flash")
                                 )
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.mode"),
+                            String(localized: "settings.paneAppearance.title", defaultValue: "Active Pane Affordance"),
+                            subtitle: String(localized: "settings.paneAppearance.subtitle", defaultValue: "Highlight the focused pane without overlaying readable content.")
+                        ) {
+                            Picker("", selection: $paneAffordanceModeRaw) {
+                                Text(String(localized: "settings.paneAppearance.mode.off", defaultValue: "Off"))
+                                    .tag(PaneAffordanceMode.off.rawValue)
+                                Text(String(localized: "settings.paneAppearance.mode.borderOnly", defaultValue: "Border only"))
+                                    .tag(PaneAffordanceMode.borderOnly.rawValue)
+                                Text(String(localized: "settings.paneAppearance.mode.borderAndBackground", defaultValue: "Border + Background tint"))
+                                    .tag(PaneAffordanceMode.borderAndBackground.rawValue)
+                                Text(String(localized: "settings.paneAppearance.mode.borderAndForeground", defaultValue: "Border + Foreground color"))
+                                    .tag(PaneAffordanceMode.borderAndForeground.rawValue)
+                            }
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .frame(maxWidth: 220)
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.borderColor"),
+                            String(localized: "settings.paneAppearance.borderColor", defaultValue: "Border color")
+                        ) {
+                            ColorPicker(
+                                "",
+                                selection: Binding<Color>(
+                                    get: { Color(nsColor: NSColor(hex: paneAffordanceBorderColorHex) ?? NSColor.systemBlue) },
+                                    set: { paneAffordanceBorderColorHex = NSColor($0).hexString() }
+                                ),
+                                supportsOpacity: false
+                            )
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) == .off)
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.activeBackgroundColor"),
+                            String(localized: "settings.paneAppearance.activeBackgroundColor", defaultValue: "Active background tint")
+                        ) {
+                            ColorPicker(
+                                "",
+                                selection: Binding<Color>(
+                                    get: { Color(nsColor: NSColor(hex: paneAffordanceActiveBackgroundHex) ?? NSColor.systemGray) },
+                                    set: { paneAffordanceActiveBackgroundHex = NSColor($0).hexString() }
+                                ),
+                                supportsOpacity: false
+                            )
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndBackground)
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.inactiveBackgroundColor"),
+                            String(localized: "settings.paneAppearance.inactiveBackgroundColor", defaultValue: "Inactive background tint")
+                        ) {
+                            ColorPicker(
+                                "",
+                                selection: Binding<Color>(
+                                    get: { Color(nsColor: NSColor(hex: paneAffordanceInactiveBackgroundHex) ?? NSColor.systemGray) },
+                                    set: { paneAffordanceInactiveBackgroundHex = NSColor($0).hexString() }
+                                ),
+                                supportsOpacity: false
+                            )
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndBackground)
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.activeForegroundColor"),
+                            String(localized: "settings.paneAppearance.activeForegroundColor", defaultValue: "Active foreground color")
+                        ) {
+                            ColorPicker(
+                                "",
+                                selection: Binding<Color>(
+                                    get: { Color(nsColor: NSColor(hex: paneAffordanceActiveForegroundHex) ?? NSColor.white) },
+                                    set: { paneAffordanceActiveForegroundHex = NSColor($0).hexString() }
+                                ),
+                                supportsOpacity: false
+                            )
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndForeground)
+                        }
+
+                        SettingsCardDivider()
+
+                        SettingsCardRow(
+                            configurationReview: .json("paneAppearance.inactiveForegroundColor"),
+                            String(localized: "settings.paneAppearance.inactiveForegroundColor", defaultValue: "Inactive foreground color")
+                        ) {
+                            ColorPicker(
+                                "",
+                                selection: Binding<Color>(
+                                    get: { Color(nsColor: NSColor(hex: paneAffordanceInactiveForegroundHex) ?? NSColor.gray) },
+                                    set: { paneAffordanceInactiveForegroundHex = NSColor($0).hexString() }
+                                ),
+                                supportsOpacity: false
+                            )
+                            .labelsHidden()
+                            .controlSize(.small)
+                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndForeground)
                         }
 
                         SettingsCardDivider()
