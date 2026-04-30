@@ -572,6 +572,83 @@ enum NotificationPaneRingSettings {
     static let defaultEnabled = true
 }
 
+enum PaneFocusBorderSettings {
+    static let enabledKey = "paneFocusBorderEnabled"
+    static let colorHexKey = "paneFocusBorderColorHex"
+    static let defaultEnabled: Bool = true
+    static let defaultColorHex: String = "#5AC8FA"
+
+    static func isEnabled(defaults: UserDefaults = .standard) -> Bool {
+        return PaneAffordanceSettings.currentMode(defaults: defaults) != .off
+    }
+
+    static func colorHex(defaults: UserDefaults = .standard) -> String {
+        if defaults.object(forKey: colorHexKey) == nil {
+            return defaultColorHex
+        }
+        return defaults.string(forKey: colorHexKey) ?? defaultColorHex
+    }
+
+    static func resolvedColor(defaults: UserDefaults = .standard) -> NSColor {
+        let hex = colorHex(defaults: defaults)
+        if let color = NSColor(hex: hex) {
+            return color
+        }
+        if let fallback = NSColor(hex: defaultColorHex) {
+            return fallback
+        }
+        return NSColor.systemBlue
+    }
+}
+
+enum PaneAffordanceMode: String, CaseIterable {
+    case off
+    case borderOnly
+    case borderAndBackground
+    case borderAndForeground
+}
+
+enum PaneAffordanceSettings {
+    static let modeKey = "paneAffordanceMode"
+    static let activeBackgroundColorHexKey = "paneAffordanceActiveBackgroundColorHex"
+    static let inactiveBackgroundColorHexKey = "paneAffordanceInactiveBackgroundColorHex"
+    static let activeForegroundColorHexKey = "paneAffordanceActiveForegroundColorHex"
+    static let inactiveForegroundColorHexKey = "paneAffordanceInactiveForegroundColorHex"
+
+    static let defaultMode: PaneAffordanceMode = .borderOnly
+    static let defaultActiveBackgroundColorHex: String = "#0E1116"
+    static let defaultInactiveBackgroundColorHex: String = "#1A1D24"
+    static let defaultActiveForegroundColorHex: String = "#FFFFFF"
+    static let defaultInactiveForegroundColorHex: String = "#7B7E85"
+
+    static func currentMode(defaults: UserDefaults = .standard) -> PaneAffordanceMode {
+        if let raw = defaults.string(forKey: modeKey),
+           let mode = PaneAffordanceMode(rawValue: raw) {
+            return mode
+        }
+        let migrated: PaneAffordanceMode
+        if defaults.object(forKey: PaneFocusBorderSettings.enabledKey) != nil {
+            migrated = defaults.bool(forKey: PaneFocusBorderSettings.enabledKey) ? .borderOnly : .off
+        } else {
+            migrated = defaultMode
+        }
+        defaults.set(migrated.rawValue, forKey: modeKey)
+        return migrated
+    }
+
+    static func resolvedColor(
+        key: String,
+        default defaultHex: String,
+        defaults: UserDefaults = .standard
+    ) -> NSColor {
+        let hex = defaults.string(forKey: key) ?? defaultHex
+        if hex != defaultHex, let color = NSColor(hex: hex) {
+            return color
+        }
+        return NSColor(hex: defaultHex) ?? NSColor.systemGray
+    }
+}
+
 enum NotificationPaneFlashSettings {
     static let enabledKey = "notificationPaneFlashEnabled"
     static let defaultEnabled = true
