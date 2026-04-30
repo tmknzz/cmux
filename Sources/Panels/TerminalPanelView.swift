@@ -16,6 +16,10 @@ struct TerminalPanelView: View {
     private var paneAffordanceActiveBackgroundHex = PaneAffordanceSettings.defaultActiveBackgroundColorHex
     @AppStorage(PaneAffordanceSettings.inactiveBackgroundColorHexKey)
     private var paneAffordanceInactiveBackgroundHex = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+    @AppStorage(PaneAffordanceSettings.activeForegroundColorHexKey)
+    private var paneAffordanceActiveForegroundHex = PaneAffordanceSettings.defaultActiveForegroundColorHex
+    @AppStorage(PaneAffordanceSettings.inactiveForegroundColorHexKey)
+    private var paneAffordanceInactiveForegroundHex = PaneAffordanceSettings.defaultInactiveForegroundColorHex
     @AppStorage(TerminalTextBoxInputSettings.maxLinesKey)
     private var textBoxMaxLines = TerminalTextBoxInputSettings.defaultMaxLines
     @State private var terminalFontSize = GhosttyConfig.load().fontSize
@@ -81,6 +85,8 @@ struct TerminalPanelView: View {
                 paneAffordanceModeRaw: isSplit ? paneAffordanceModeRaw : PaneAffordanceMode.off.rawValue,
                 paneAffordanceActiveBackgroundHex: paneAffordanceActiveBackgroundHex,
                 paneAffordanceInactiveBackgroundHex: paneAffordanceInactiveBackgroundHex,
+                paneAffordanceActiveForegroundHex: paneAffordanceActiveForegroundHex,
+                paneAffordanceInactiveForegroundHex: paneAffordanceInactiveForegroundHex,
                 inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
                 inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
                 searchState: panel.searchState,
