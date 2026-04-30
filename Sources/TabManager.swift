@@ -5382,6 +5382,12 @@ class TabManager: ObservableObject {
         tab.moveFocus(direction: direction)
     }
 
+    func cyclePaneFocus(forward: Bool) {
+        guard let selectedTabId,
+              let tab = tabs.first(where: { $0.id == selectedTabId }) else { return }
+        tab.cyclePaneFocus(forward: forward)
+    }
+
     // MARK: - Recent Tab History Navigation
 
     private func recordTabInHistory(_ tabId: UUID) {
