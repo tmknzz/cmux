@@ -91,6 +91,12 @@ final class CmuxSettingsFileStore {
         "browser.reactGrabVersion",
         "shortcuts.showModifierHoldHints",
         "shortcuts.bindings",
+        "paneAppearance.mode",
+        "paneAppearance.borderColor",
+        "paneAppearance.activeBackgroundColor",
+        "paneAppearance.inactiveBackgroundColor",
+        "paneAppearance.activeForegroundColor",
+        "paneAppearance.inactiveForegroundColor",
     ]
 
     private static let releaseBundleIdentifier = "com.cmuxterm.app"
