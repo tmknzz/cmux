@@ -590,14 +590,12 @@ enum PaneFocusBorderSettings {
     }
 
     static func resolvedColor(defaults: UserDefaults = .standard) -> NSColor {
-        let hex = colorHex(defaults: defaults)
-        if let color = NSColor(hex: hex) {
-            return color
-        }
-        if let fallback = NSColor(hex: defaultColorHex) {
-            return fallback
-        }
-        return NSColor.systemBlue
+        return NSColor.resolved(
+            forKey: colorHexKey,
+            defaultHex: defaultColorHex,
+            fallback: .systemBlue,
+            defaults: defaults
+        )
     }
 }
 
@@ -641,11 +639,27 @@ enum PaneAffordanceSettings {
         default defaultHex: String,
         defaults: UserDefaults = .standard
     ) -> NSColor {
+        return NSColor.resolved(
+            forKey: key,
+            defaultHex: defaultHex,
+            fallback: .systemGray,
+            defaults: defaults
+        )
+    }
+}
+
+private extension NSColor {
+    static func resolved(
+        forKey key: String,
+        defaultHex: String,
+        fallback: NSColor,
+        defaults: UserDefaults = .standard
+    ) -> NSColor {
         let hex = defaults.string(forKey: key) ?? defaultHex
         if hex != defaultHex, let color = NSColor(hex: hex) {
             return color
         }
-        return NSColor(hex: defaultHex) ?? NSColor.systemGray
+        return NSColor(hex: defaultHex) ?? fallback
     }
 }
 
