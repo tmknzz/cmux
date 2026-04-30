@@ -8,6 +8,10 @@ struct TerminalPanelView: View {
     @ObservedObject var panel: TerminalPanel
     @AppStorage(NotificationPaneRingSettings.enabledKey)
     private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.enabledKey)
+    private var paneFocusBorderEnabled = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneFocusBorderSettings.colorHexKey)
+    private var paneFocusBorderColorHex = PaneFocusBorderSettings.defaultColorHex
     let paneId: PaneID
     let isFocused: Bool
     let isVisibleInUI: Bool
@@ -29,6 +33,8 @@ struct TerminalPanelView: View {
             portalZPriority: portalPriority,
             showsInactiveOverlay: isSplit && !isFocused,
             showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
+            focusedBorderEnabled: isFocused && isSplit && paneFocusBorderEnabled,
+            focusedBorderColorHex: paneFocusBorderColorHex,
             inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
             inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
             searchState: panel.searchState,
