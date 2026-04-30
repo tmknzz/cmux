@@ -150,6 +150,8 @@ export const shortcutCategories: ShortcutCategory[] = [
       { id: "focusRight", combos: [["⌥", "⌘", "→"]], description: { en: "Focus pane right", ja: "右のペインにフォーカス" } },
       { id: "focusUp", combos: [["⌥", "⌘", "↑"]], description: { en: "Focus pane up", ja: "上のペインにフォーカス" } },
       { id: "focusDown", combos: [["⌥", "⌘", "↓"]], description: { en: "Focus pane down", ja: "下のペインにフォーカス" } },
+      { id: "focusNextPane", combos: [["⌃", "⇥"]], description: { en: "Focus next pane", ja: "次のペインにフォーカス" } },
+      { id: "focusPreviousPane", combos: [["⌃", "⇧", "⇥"]], description: { en: "Focus previous pane", ja: "前のペインにフォーカス" } },
       { id: "splitRight", combos: [["⌘", "D"]], description: { en: "Split right", ja: "右に分割" } },
       { id: "splitDown", combos: [["⌘", "⇧", "D"]], description: { en: "Split down", ja: "下に分割" } },
       { id: "splitBrowserRight", combos: [["⌥", "⌘", "D"]], description: { en: "Split browser right", ja: "右にブラウザ分割" } },
