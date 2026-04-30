@@ -1,23 +1,33 @@
-# Ghostty Fork Changes (manaflow-ai/ghostty)
+# Ghostty Fork Changes (tamekuniz/ghostty, branched from manaflow-ai/ghostty)
 
 This repo uses a fork of Ghostty for local patches that aren't upstream yet.
 When we change the fork, update this document and the parent submodule SHA.
 
+The submodule URL was switched from `manaflow-ai/ghostty` to
+`tamekuniz/ghostty` on May 1, 2026 to land the `active-pane-affordance` work
+on a fork the local maintainer can push to directly. `tamekuniz/ghostty:main`
+is hard-reset to `manaflow-ai/ghostty:04ec69173` plus the per-surface
+foreground override patch (section 10 below). The original
+`manaflow-ai/ghostty:main` tip prior to the switch is preserved at
+`tamekuniz/ghostty:backup-main-20260501`.
+
 ## Fork update checklist
 
 1) Make changes in `ghostty/`.
-2) Commit and push to `manaflow-ai/ghostty`.
+2) Commit and push to `tamekuniz/ghostty`.
 3) Update this file with the new change summary + conflict notes.
 4) In the parent repo: `git add ghostty` and commit the submodule SHA.
 
 ## Current fork changes
 
-The fork was refreshed from upstream `main` again on April 28, 2026.
-Current cmux pinned fork head: `04ec69173`, merged into fork `main` via
-`manaflow-ai/ghostty` PR https://github.com/manaflow-ai/ghostty/pull/50
-(`xcframework-d3117e03ea19665bc83a28f7e0428c63937e6140-8-g04ec69173`).
-This head restores the cmux theme picker hooks on top of `d3117e03e`, which
-merged upstream `659019666` and preserved the previous cmux pin `465a9a621`.
+Current cmux pinned fork head: `a31d7fa5f`
+(`tamekuniz/ghostty:main`), which is the prior pin `04ec69173` plus the
+per-surface foreground override C API (section 10) cherry-picked on top.
+The base `04ec69173` was refreshed from upstream `main` on April 28, 2026
+via `manaflow-ai/ghostty` PR https://github.com/manaflow-ai/ghostty/pull/50
+(`xcframework-d3117e03ea19665bc83a28f7e0428c63937e6140-8-g04ec69173`) and
+restores the cmux theme picker hooks on top of `d3117e03e`, which merged
+upstream `659019666` and preserved the previous cmux pin `465a9a621`.
 
 ### 1) macOS display link restart on display changes
 
@@ -143,7 +153,7 @@ tend to conflict together during rebases.
 
 ### 10) Per-surface foreground override C API
 
-- Commit: pending (cycle 6 of cmux active-pane-affordance branch — submodule SHA gets bumped in the parent repo as part of this work)
+- Commit: `a31d7fa5f2ccc298490306d31a0deeef105d5833` (cherry-picked onto `04ec69173` for the active-pane-affordance bump; the submodule URL was switched from `manaflow-ai/ghostty` to `tamekuniz/ghostty` at the same time because we lacked the `workflow` OAuth scope to push tree-level workflow file diffs into the team fork).
 - Files:
   - `include/ghostty.h`
   - `src/apprt/embedded.zig`
@@ -153,9 +163,12 @@ tend to conflict together during rebases.
   - Internally it locks `renderer_state.mutex` and calls the same `terminal.colors.foreground.set` / `.reset` path the OSC 10 handler uses, so the existing renderer pickup keeps working.
   - The new API is opt-in: existing surface creation / config paths are unchanged, and downstream apps that never call it see no behavior difference.
 
-The current cmux pin is the head listed above. It is reachable from the
-`manaflow-ai/ghostty` fork `main` branch and has a matching prebuilt release
-tag `xcframework-04ec69173f8f5ac5a2568afca0faf8e4a74b2dc2`.
+The current cmux pin is the head listed above on the `tamekuniz/ghostty`
+fork `main` branch. The matching prebuilt release tag
+`xcframework-a31d7fa5f2ccc298490306d31a0deeef105d5833` is **pending**: the
+xcframework needs to be rebuilt (`cd ghostty && zig build -Demit-xcframework=true -Dxcframework-target=universal -Doptimize=ReleaseFast`)
+and republished as a release asset before
+`scripts/ghosttykit-checksums.txt` can be updated.
 
 ## Upstreamed fork changes
 
