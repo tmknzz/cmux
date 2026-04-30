@@ -5,11 +5,11 @@
 16364	Sources/TerminalController.swift
 15762	Sources/ContentView.swift
 13748	Sources/AppDelegate.swift
-13702	Sources/Workspace.swift
-13208	Sources/GhosttyTerminalView.swift
+13724	Sources/Workspace.swift
+13439	Sources/GhosttyTerminalView.swift
 10549	Sources/Panels/BrowserPanel.swift
-8419	Sources/cmuxApp.swift
-7490	Sources/TabManager.swift
+8548	Sources/cmuxApp.swift
+7496	Sources/TabManager.swift
 6811	Sources/Panels/BrowserPanelView.swift
 5139	cmuxTests/AppDelegateShortcutRoutingTests.swift
 4641	cmuxTests/WorkspaceUnitTests.swift
@@ -21,7 +21,7 @@
 3128	cmuxTests/BrowserPanelTests.swift
 3126	cmuxTests/WorkspaceRemoteConnectionTests.swift
 2850	Sources/CmuxConfig.swift
-2675	Sources/KeyboardShortcutSettings.swift
+2683	Sources/KeyboardShortcutSettings.swift
 2491	Sources/Panels/CmuxWebView.swift
 2292	cmuxTests/TabManagerUnitTests.swift
 2153	cmuxTests/SessionPersistenceTests.swift
@@ -37,7 +37,7 @@
 1563	cmuxTests/WindowAndDragTests.swift
 1517	cmuxUITests/BrowserPaneNavigationKeybindUITests.swift
 1502	Sources/Update/UpdateTitlebarAccessory.swift
-1423	Sources/TerminalNotificationStore.swift
+1514	Sources/TerminalNotificationStore.swift
 1365	Sources/Feed/FeedButtonStyleDebugWindowController.swift
 1292	cmuxUITests/SidebarHelpMenuUITests.swift
 1255	cmuxTests/NotificationAndMenuBarTests.swift
