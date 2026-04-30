@@ -9303,6 +9303,7 @@ final class GhosttySurfaceScrollView: NSView {
     private let documentView: NSView
     private let surfaceView: GhosttyNSView
     private let inactiveOverlayView: GhosttyFlashOverlayView
+    private let activePaneTintOverlayView: GhosttyFlashOverlayView
     private let dropZoneOverlayView: GhosttyFlashOverlayView
     private let notificationRingOverlayView: GhosttyFlashOverlayView
     private let notificationRingLayer: CAShapeLayer
@@ -9537,6 +9538,7 @@ final class GhosttySurfaceScrollView: NSView {
         backgroundView = NSView(frame: .zero)
         scrollView = GhosttyScrollView()
         inactiveOverlayView = GhosttyFlashOverlayView(frame: .zero)
+        activePaneTintOverlayView = GhosttyFlashOverlayView(frame: .zero)
         dropZoneOverlayView = GhosttyFlashOverlayView(frame: .zero)
         notificationRingOverlayView = GhosttyFlashOverlayView(frame: .zero)
         notificationRingLayer = CAShapeLayer()
@@ -9582,6 +9584,12 @@ final class GhosttySurfaceScrollView: NSView {
         inactiveOverlayView.layer?.backgroundColor = NSColor.clear.cgColor
         inactiveOverlayView.isHidden = true
         addSubview(inactiveOverlayView)
+        activePaneTintOverlayView.wantsLayer = true
+        activePaneTintOverlayView.layer?.backgroundColor = NSColor.clear.cgColor
+        activePaneTintOverlayView.layer?.masksToBounds = false
+        activePaneTintOverlayView.autoresizingMask = [.width, .height]
+        activePaneTintOverlayView.isHidden = true
+        addSubview(activePaneTintOverlayView)
         dropZoneOverlayView.wantsLayer = true
         dropZoneOverlayView.layer?.backgroundColor = cmuxAccentNSColor().withAlphaComponent(0.25).cgColor
         dropZoneOverlayView.layer?.borderColor = cmuxAccentNSColor().cgColor
@@ -10012,6 +10020,7 @@ final class GhosttySurfaceScrollView: NSView {
         }
         _ = setFrameIfNeeded(notificationRingOverlayView, to: bounds)
         _ = setFrameIfNeeded(focusBorderOverlayView, to: bounds)
+        _ = setFrameIfNeeded(activePaneTintOverlayView, to: bounds)
         _ = setFrameIfNeeded(flashOverlayView, to: bounds)
         if let overlay = searchOverlayHostingView {
             _ = setFrameIfNeeded(overlay, to: bounds)
@@ -10300,6 +10309,51 @@ final class GhosttySurfaceScrollView: NSView {
         }
         if focusBorderLayer.path == nil {
             updateFocusBorderPath()
+        }
+    }
+
+    func setActivePaneTint(
+        modeRaw: String,
+        isActive: Bool,
+        activeColorHex: String,
+        inactiveColorHex: String
+    ) {
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.setActivePaneTint(
+                    modeRaw: modeRaw,
+                    isActive: isActive,
+                    activeColorHex: activeColorHex,
+                    inactiveColorHex: inactiveColorHex
+                )
+            }
+            return
+        }
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        defer { CATransaction.commit() }
+
+        let mode = PaneAffordanceMode(rawValue: modeRaw) ?? PaneAffordanceSettings.defaultMode
+        guard mode == .borderAndBackground else {
+            if !activePaneTintOverlayView.isHidden {
+                activePaneTintOverlayView.isHidden = true
+            }
+            return
+        }
+
+        let hex = isActive ? activeColorHex : inactiveColorHex
+        let fallback = isActive
+            ? PaneAffordanceSettings.defaultActiveBackgroundColorHex
+            : PaneAffordanceSettings.defaultInactiveBackgroundColorHex
+        let baseColor = NSColor(hex: hex) ?? NSColor(hex: fallback) ?? NSColor.systemGray
+        let tintColor = baseColor.withAlphaComponent(0.18)
+        let desired = tintColor.cgColor
+        if activePaneTintOverlayView.layer?.backgroundColor != desired {
+            activePaneTintOverlayView.layer?.backgroundColor = desired
+        }
+        if activePaneTintOverlayView.isHidden {
+            activePaneTintOverlayView.isHidden = false
         }
     }
 
@@ -12826,6 +12880,9 @@ struct GhosttyTerminalView: NSViewRepresentable {
     var showsUnreadNotificationRing: Bool = false
     var focusedBorderEnabled: Bool = false
     var focusedBorderColorHex: String = PaneFocusBorderSettings.defaultColorHex
+    var paneAffordanceModeRaw: String = PaneAffordanceSettings.defaultMode.rawValue
+    var paneAffordanceActiveBackgroundHex: String = PaneAffordanceSettings.defaultActiveBackgroundColorHex
+    var paneAffordanceInactiveBackgroundHex: String = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
     var inactiveOverlayColor: NSColor = .clear
     var inactiveOverlayOpacity: Double = 0
     var searchState: TerminalSurface.SearchState? = nil
@@ -12911,6 +12968,9 @@ struct GhosttyTerminalView: NSViewRepresentable {
         var desiredShowsUnreadNotificationRing: Bool = false
         var desiredFocusedBorderEnabled: Bool = false
         var desiredFocusedBorderColorHex: String = PaneFocusBorderSettings.defaultColorHex
+        var desiredPaneAffordanceModeRaw: String = PaneAffordanceSettings.defaultMode.rawValue
+        var desiredPaneAffordanceActiveBackgroundHex: String = PaneAffordanceSettings.defaultActiveBackgroundColorHex
+        var desiredPaneAffordanceInactiveBackgroundHex: String = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
         var desiredPortalZPriority: Int = 0
         var lastBoundHostId: ObjectIdentifier?
         var lastPaneDropZone: DropZone?
@@ -12988,6 +13048,9 @@ struct GhosttyTerminalView: NSViewRepresentable {
         coordinator.desiredShowsUnreadNotificationRing = showsUnreadNotificationRing
         coordinator.desiredFocusedBorderEnabled = focusedBorderEnabled
         coordinator.desiredFocusedBorderColorHex = focusedBorderColorHex
+        coordinator.desiredPaneAffordanceModeRaw = paneAffordanceModeRaw
+        coordinator.desiredPaneAffordanceActiveBackgroundHex = paneAffordanceActiveBackgroundHex
+        coordinator.desiredPaneAffordanceInactiveBackgroundHex = paneAffordanceInactiveBackgroundHex
         coordinator.desiredPortalZPriority = portalZPriority
         coordinator.hostedView = hostedView
 #if DEBUG
@@ -13036,6 +13099,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
             )
             hostedView.setNotificationRing(visible: showsUnreadNotificationRing)
             hostedView.updateFocusBorder(enabled: focusedBorderEnabled, colorHex: focusedBorderColorHex)
+            hostedView.setActivePaneTint(
+                modeRaw: paneAffordanceModeRaw,
+                isActive: isActive,
+                activeColorHex: paneAffordanceActiveBackgroundHex,
+                inactiveColorHex: paneAffordanceInactiveBackgroundHex
+            )
             hostedView.setSearchOverlay(searchState: searchState)
             hostedView.syncKeyStateIndicator(text: terminalSurface.currentKeyStateIndicatorText)
         }
@@ -13105,6 +13174,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
                     enabled: coordinator.desiredFocusedBorderEnabled,
                     colorHex: coordinator.desiredFocusedBorderColorHex
                 )
+                hostedView.setActivePaneTint(
+                    modeRaw: coordinator.desiredPaneAffordanceModeRaw,
+                    isActive: coordinator.desiredIsActive,
+                    activeColorHex: coordinator.desiredPaneAffordanceActiveBackgroundHex,
+                    inactiveColorHex: coordinator.desiredPaneAffordanceInactiveBackgroundHex
+                )
             }
             host.onGeometryChanged = { [weak host, weak hostedView, weak coordinator] in
                 guard let host, let hostedView, let coordinator else { return }
@@ -13144,6 +13219,12 @@ struct GhosttyTerminalView: NSViewRepresentable {
                     hostedView.updateFocusBorder(
                         enabled: coordinator.desiredFocusedBorderEnabled,
                         colorHex: coordinator.desiredFocusedBorderColorHex
+                    )
+                    hostedView.setActivePaneTint(
+                        modeRaw: coordinator.desiredPaneAffordanceModeRaw,
+                        isActive: coordinator.desiredIsActive,
+                        activeColorHex: coordinator.desiredPaneAffordanceActiveBackgroundHex,
+                        inactiveColorHex: coordinator.desiredPaneAffordanceInactiveBackgroundHex
                     )
                 }
                 Self.synchronizePortalGeometry(
@@ -13249,6 +13330,9 @@ struct GhosttyTerminalView: NSViewRepresentable {
         coordinator.desiredShowsUnreadNotificationRing = false
         coordinator.desiredFocusedBorderEnabled = false
         coordinator.desiredFocusedBorderColorHex = PaneFocusBorderSettings.defaultColorHex
+        coordinator.desiredPaneAffordanceModeRaw = PaneAffordanceSettings.defaultMode.rawValue
+        coordinator.desiredPaneAffordanceActiveBackgroundHex = PaneAffordanceSettings.defaultActiveBackgroundColorHex
+        coordinator.desiredPaneAffordanceInactiveBackgroundHex = PaneAffordanceSettings.defaultInactiveBackgroundColorHex
         coordinator.desiredPortalZPriority = 0
         coordinator.lastBoundHostId = nil
         let hostedView = coordinator.hostedView
