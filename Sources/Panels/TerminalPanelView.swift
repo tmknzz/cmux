@@ -8,8 +8,8 @@ struct TerminalPanelView: View {
     @ObservedObject var panel: TerminalPanel
     @AppStorage(NotificationPaneRingSettings.enabledKey)
     private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
-    @AppStorage(PaneFocusBorderSettings.enabledKey)
-    private var paneFocusBorderEnabled = PaneFocusBorderSettings.defaultEnabled
+    @AppStorage(PaneAffordanceSettings.modeKey)
+    private var paneAffordanceModeRaw = PaneAffordanceSettings.defaultMode.rawValue
     @AppStorage(PaneFocusBorderSettings.colorHexKey)
     private var paneFocusBorderColorHex = PaneFocusBorderSettings.defaultColorHex
     @AppStorage(TerminalTextBoxInputSettings.maxLinesKey)
@@ -72,7 +72,7 @@ struct TerminalPanelView: View {
                 portalZPriority: portalPriority,
                 showsInactiveOverlay: isSplit && !isFocused,
                 showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
-                focusedBorderEnabled: isFocused && isSplit && paneFocusBorderEnabled,
+                focusedBorderEnabled: isFocused && isSplit && (PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .off,
                 focusedBorderColorHex: paneFocusBorderColorHex,
                 inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
                 inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
