@@ -284,9 +284,9 @@ enum KeyboardShortcutSettings {
             case .splitBrowserDown:
                 return StoredShortcut(key: "d", command: true, shift: true, option: true, control: false)
             case .nextSurface:
-                return StoredShortcut(key: "]", command: true, shift: true, option: false, control: false)
+                return StoredShortcut(key: "\t", command: false, shift: false, option: true, control: true)
             case .prevSurface:
-                return StoredShortcut(key: "[", command: true, shift: true, option: false, control: false)
+                return StoredShortcut(key: "\t", command: false, shift: true, option: true, control: true)
             case .selectSurfaceByNumber:
                 return StoredShortcut(key: "1", command: false, shift: false, option: false, control: true)
             case .newSurface:

@@ -88,8 +88,8 @@ export const shortcutCategories: ShortcutCategory[] = [
     blurbKey: "surfacesBlurb",
     shortcuts: [
       { id: "newSurface", combos: [["⌘", "T"]], description: { en: "New surface", ja: "新規サーフェス" } },
-      { id: "nextSurface", combos: [["⌘", "⇧", "]"]], description: { en: "Next surface", ja: "次のサーフェス" } },
-      { id: "prevSurface", combos: [["⌘", "⇧", "["]], description: { en: "Previous surface", ja: "前のサーフェス" } },
+      { id: "nextSurface", combos: [["⌃", "⌥", "⇥"]], description: { en: "Next surface", ja: "次のサーフェス" } },
+      { id: "prevSurface", combos: [["⌃", "⇧", "⌥", "⇥"]], description: { en: "Previous surface", ja: "前のサーフェス" } },
       { id: "selectSurfaceByNumber", combos: [["⌃", "1…9"]], description: { en: "Select surface 1…9", ja: "サーフェス1…9を選択" } },
       { id: "renameTab", combos: [["⌘", "R"]], description: { en: "Rename tab", ja: "タブ名を変更" } },
       { id: "closeTab", combos: [["⌘", "W"]], description: { en: "Close tab", ja: "タブを閉じる" } },
