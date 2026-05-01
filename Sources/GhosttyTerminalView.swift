@@ -15140,15 +15140,20 @@ struct GhosttyTerminalView: NSViewRepresentable {
                 activeColorHex: paneAffordanceActiveBackgroundHex,
                 inactiveColorHex: paneAffordanceInactiveBackgroundHex
             )
-            hostedView.setActiveForegroundOverride(
-                modeRaw: paneAffordanceModeRaw,
-                isActive: isActive,
-                activeColorHex: paneAffordanceActiveForegroundHex,
-                inactiveColorHex: paneAffordanceInactiveForegroundHex
-            )
             hostedView.setSearchOverlay(searchState: searchState)
             hostedView.syncKeyStateIndicator(text: terminalSurface.currentKeyStateIndicatorText)
         }
+        // Foreground override targets the underlying ghostty surface and
+        // must run on every TerminalPanelView update, even when this
+        // hostedView is not the current portal owner — otherwise a pane
+        // that loses focus keeps the active color until something else
+        // re-renders it.
+        hostedView.setActiveForegroundOverride(
+            modeRaw: paneAffordanceModeRaw,
+            isActive: isActive,
+            activeColorHex: paneAffordanceActiveForegroundHex,
+            inactiveColorHex: paneAffordanceInactiveForegroundHex
+        )
         let portalExpectedSurfaceId = terminalSurface.id
         let portalExpectedGeneration = terminalSurface.portalBindingGeneration()
         func portalBindingStillLive() -> Bool {
