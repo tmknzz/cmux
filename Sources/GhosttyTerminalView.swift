@@ -12199,7 +12199,7 @@ final class GhosttySurfaceScrollView: NSView {
 
         guard let surface = surfaceView.terminalSurface?.surface else { return }
         let mode = PaneAffordanceMode(rawValue: modeRaw) ?? PaneAffordanceSettings.defaultMode
-        guard mode == .borderAndForeground else {
+        guard mode == .borderAndForeground || mode == .foregroundOnly else {
             ghostty_surface_set_foreground_override(surface, 0, 0, 0, true)
             return
         }
