@@ -6754,6 +6754,8 @@ struct SettingsView: View {
                                     .tag(PaneAffordanceMode.borderAndBackground.rawValue)
                                 Text(String(localized: "settings.paneAppearance.mode.borderAndForeground", defaultValue: "Border + Foreground color"))
                                     .tag(PaneAffordanceMode.borderAndForeground.rawValue)
+                                Text(String(localized: "settings.paneAppearance.mode.foregroundOnly", defaultValue: "Foreground only"))
+                                    .tag(PaneAffordanceMode.foregroundOnly.rawValue)
                             }
                             .labelsHidden()
                             .controlSize(.small)
@@ -6776,7 +6778,10 @@ struct SettingsView: View {
                             )
                             .labelsHidden()
                             .controlSize(.small)
-                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) == .off)
+                            .disabled({
+                                let mode = PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode
+                                return mode == .off || mode == .foregroundOnly
+                            }())
                         }
 
                         SettingsCardDivider()
@@ -6833,7 +6838,10 @@ struct SettingsView: View {
                             )
                             .labelsHidden()
                             .controlSize(.small)
-                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndForeground)
+                            .disabled({
+                                let mode = PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode
+                                return mode != .borderAndForeground && mode != .foregroundOnly
+                            }())
                         }
 
                         SettingsCardDivider()
@@ -6852,7 +6860,10 @@ struct SettingsView: View {
                             )
                             .labelsHidden()
                             .controlSize(.small)
-                            .disabled((PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .borderAndForeground)
+                            .disabled({
+                                let mode = PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode
+                                return mode != .borderAndForeground && mode != .foregroundOnly
+                            }())
                         }
 
                         SettingsCardDivider()

@@ -604,6 +604,7 @@ enum PaneAffordanceMode: String, CaseIterable {
     case borderOnly
     case borderAndBackground
     case borderAndForeground
+    case foregroundOnly
 }
 
 enum PaneAffordanceSettings {
