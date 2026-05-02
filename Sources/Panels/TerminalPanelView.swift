@@ -41,7 +41,7 @@ struct TerminalPanelView: View {
             portalZPriority: portalPriority,
             showsInactiveOverlay: isSplit && !isFocused,
             showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
-            focusedBorderEnabled: isFocused && isSplit && (PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .off,
+            focusedBorderEnabled: isFocused && isSplit && (PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .off && (PaneAffordanceMode(rawValue: paneAffordanceModeRaw) ?? PaneAffordanceSettings.defaultMode) != .foregroundOnly,
             focusedBorderColorHex: paneFocusBorderColorHex,
             paneAffordanceModeRaw: isSplit ? paneAffordanceModeRaw : PaneAffordanceMode.off.rawValue,
             paneAffordanceActiveBackgroundHex: paneAffordanceActiveBackgroundHex,
