@@ -77,10 +77,22 @@ fi
 
 GHOSTTY_SHA="$(git -C ghostty rev-parse HEAD)"
 GHOSTTYKIT_CRASH_REPORT_SUBDIR="${CMUX_GHOSTTYKIT_CRASH_REPORT_SUBDIR:-cmux/crash}"
-GHOSTTYKIT_BUILD_FLAVOR="crashsubdir-$(printf '%s' "$GHOSTTYKIT_CRASH_REPORT_SUBDIR" | tr '/=' '--')-v1"
+GHOSTTYKIT_SUPPORTS_CRASH_REPORT_SUBDIR=0
+if grep -R -- "-Dcrash-report-subdir" ghostty/build.zig ghostty/src/build >/dev/null 2>&1 ||
+  grep -R -- "crash-report-subdir" ghostty/build.zig ghostty/src/build >/dev/null 2>&1; then
+  GHOSTTYKIT_SUPPORTS_CRASH_REPORT_SUBDIR=1
+fi
+if [[ "$GHOSTTYKIT_SUPPORTS_CRASH_REPORT_SUBDIR" == "1" ]]; then
+  GHOSTTYKIT_BUILD_FLAVOR="crashsubdir-$(printf '%s' "$GHOSTTYKIT_CRASH_REPORT_SUBDIR" | tr '/=' '--')-v1"
+else
+  GHOSTTYKIT_BUILD_FLAVOR="legacy-v1"
+fi
 GHOSTTY_CLEAN_KEY="${GHOSTTY_SHA}-${GHOSTTYKIT_BUILD_FLAVOR}"
 GHOSTTY_KEY="$GHOSTTY_CLEAN_KEY"
-UNTRACKED_FILES="$(git -C ghostty ls-files --others --exclude-standard)"
+UNTRACKED_FILES="$(
+  git -C ghostty ls-files --others --exclude-standard |
+    grep -Ev '^(\.zig-cache/|zig-out/|zig-pkg/)' || true
+)"
 if ! git -C ghostty diff --quiet --ignore-submodules=all HEAD -- || [[ -n "$UNTRACKED_FILES" ]]; then
   DIRTY_HASH="$(
     {
@@ -222,7 +234,15 @@ else
     echo "==> Building GhosttyKit.xcframework (this may take a few minutes)..."
     (
       cd ghostty
-      zig build -Dcrash-report-subdir="$GHOSTTYKIT_CRASH_REPORT_SUBDIR" -Demit-xcframework=true -Dxcframework-target=universal -Doptimize=ReleaseFast
+      GHOSTTYKIT_BUILD_ARGS=(
+        -Demit-xcframework=true
+        -Dxcframework-target=universal
+        -Doptimize=ReleaseFast
+      )
+      if [[ "$GHOSTTYKIT_SUPPORTS_CRASH_REPORT_SUBDIR" == "1" ]]; then
+        GHOSTTYKIT_BUILD_ARGS=(-Dcrash-report-subdir="$GHOSTTYKIT_CRASH_REPORT_SUBDIR" "${GHOSTTYKIT_BUILD_ARGS[@]}")
+      fi
+      zig build "${GHOSTTYKIT_BUILD_ARGS[@]}"
     )
     echo "$GHOSTTY_KEY" > "$LOCAL_KEY_STAMP"
     echo "$GHOSTTY_SHA" > "$LEGACY_LOCAL_SHA_STAMP"
