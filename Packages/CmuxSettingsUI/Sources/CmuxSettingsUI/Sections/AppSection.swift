@@ -42,6 +42,12 @@ public struct AppSection: View {
     @State private var showInMenuBar: DefaultsValueModel<Bool>
     @State private var paneRing: DefaultsValueModel<Bool>
     @State private var paneFlash: DefaultsValueModel<Bool>
+    @State private var paneAffordanceMode: DefaultsValueModel<String>
+    @State private var paneAffordanceBorderColor: DefaultsValueModel<String>
+    @State private var paneAffordanceActiveBackground: DefaultsValueModel<String>
+    @State private var paneAffordanceInactiveBackground: DefaultsValueModel<String>
+    @State private var paneAffordanceActiveForeground: DefaultsValueModel<String>
+    @State private var paneAffordanceInactiveForeground: DefaultsValueModel<String>
     @State private var soundName: DefaultsValueModel<String>
     @State private var soundCommand: DefaultsValueModel<String>
     @State private var customSoundFile: DefaultsValueModel<String>
@@ -82,6 +88,12 @@ public struct AppSection: View {
         _showInMenuBar = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.showInMenuBar))
         _paneRing = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.unreadPaneRing))
         _paneFlash = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.paneFlash))
+        _paneAffordanceMode = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.mode))
+        _paneAffordanceBorderColor = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.borderColor))
+        _paneAffordanceActiveBackground = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.activeBackgroundColor))
+        _paneAffordanceInactiveBackground = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.inactiveBackgroundColor))
+        _paneAffordanceActiveForeground = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.activeForegroundColor))
+        _paneAffordanceInactiveForeground = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.paneAppearance.inactiveForegroundColor))
         _soundName = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.sound))
         _soundCommand = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.command))
         _customSoundFile = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.notifications.customSoundFilePath))
@@ -395,6 +407,70 @@ public struct AppSection: View {
                     .labelsHidden()
                     .controlSize(.small)
             }
+            SettingsCardDivider()
+
+            SettingsCardRow(
+                configurationReview: .json("paneAppearance.mode"),
+                String(localized: "settings.paneAppearance.title", defaultValue: "Active Pane Affordance"),
+                subtitle: String(localized: "settings.paneAppearance.subtitle", defaultValue: "Highlight the focused pane without overlaying readable content."),
+                controlWidth: Self.columnWidth
+            ) {
+                Picker("", selection: Binding(get: { paneAffordanceMode.current }, set: { paneAffordanceMode.set($0) })) {
+                    Text(String(localized: "settings.paneAppearance.mode.off", defaultValue: "Off")).tag(Self.paneAffordanceOff)
+                    Text(String(localized: "settings.paneAppearance.mode.borderOnly", defaultValue: "Border only")).tag(Self.paneAffordanceBorderOnly)
+                    Text(String(localized: "settings.paneAppearance.mode.borderAndBackground", defaultValue: "Border + Background tint")).tag(Self.paneAffordanceBorderAndBackground)
+                    Text(String(localized: "settings.paneAppearance.mode.borderAndForeground", defaultValue: "Border + Foreground color")).tag(Self.paneAffordanceBorderAndForeground)
+                    Text(String(localized: "settings.paneAppearance.mode.foregroundOnly", defaultValue: "Foreground only")).tag(Self.paneAffordanceForegroundOnly)
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .controlSize(.small)
+            }
+            SettingsCardDivider()
+
+            colorPickerRow(
+                title: String(localized: "settings.paneAppearance.borderColor", defaultValue: "Border color"),
+                path: "paneAppearance.borderColor",
+                model: paneAffordanceBorderColor,
+                fallback: .systemBlue
+            )
+            .disabled(paneAffordanceMode.current == Self.paneAffordanceOff || paneAffordanceMode.current == Self.paneAffordanceForegroundOnly)
+            SettingsCardDivider()
+
+            colorPickerRow(
+                title: String(localized: "settings.paneAppearance.activeBackgroundColor", defaultValue: "Active background tint"),
+                path: "paneAppearance.activeBackgroundColor",
+                model: paneAffordanceActiveBackground,
+                fallback: .systemGray
+            )
+            .disabled(paneAffordanceMode.current != Self.paneAffordanceBorderAndBackground)
+            SettingsCardDivider()
+
+            colorPickerRow(
+                title: String(localized: "settings.paneAppearance.inactiveBackgroundColor", defaultValue: "Inactive background tint"),
+                path: "paneAppearance.inactiveBackgroundColor",
+                model: paneAffordanceInactiveBackground,
+                fallback: .systemGray
+            )
+            .disabled(paneAffordanceMode.current != Self.paneAffordanceBorderAndBackground)
+            SettingsCardDivider()
+
+            colorPickerRow(
+                title: String(localized: "settings.paneAppearance.activeForegroundColor", defaultValue: "Active foreground color"),
+                path: "paneAppearance.activeForegroundColor",
+                model: paneAffordanceActiveForeground,
+                fallback: .white
+            )
+            .disabled(!Self.foregroundColorsEnabled(mode: paneAffordanceMode.current))
+            SettingsCardDivider()
+
+            colorPickerRow(
+                title: String(localized: "settings.paneAppearance.inactiveForegroundColor", defaultValue: "Inactive foreground color"),
+                path: "paneAppearance.inactiveForegroundColor",
+                model: paneAffordanceInactiveForeground,
+                fallback: .gray
+            )
+            .disabled(!Self.foregroundColorsEnabled(mode: paneAffordanceMode.current))
 
             // Desktop Notifications — legacy renders this row
             // unconditionally with a permission-state status text +
@@ -558,6 +634,12 @@ public struct AppSection: View {
     /// legacy `NotificationSoundSettings.systemSounds` list shape
     /// (order, labels, and the `custom_file` sentinel value).
     private static let customSoundFileValue = "custom_file"
+    private static let paneAffordanceOff = "off"
+    private static let paneAffordanceBorderOnly = "borderOnly"
+    private static let paneAffordanceBorderAndBackground = "borderAndBackground"
+    private static let paneAffordanceBorderAndForeground = "borderAndForeground"
+    private static let paneAffordanceForegroundOnly = "foregroundOnly"
+
     private static let systemSoundOptions: [(value: String, label: String)] = [
         ("default", "Default"),
         ("Basso", "Basso"),
@@ -577,6 +659,30 @@ public struct AppSection: View {
         (customSoundFileValue, "Custom File..."),
         ("none", "None"),
     ]
+
+    private static func foregroundColorsEnabled(mode: String) -> Bool {
+        mode == paneAffordanceBorderAndForeground || mode == paneAffordanceForegroundOnly
+    }
+
+    private func colorPickerRow(
+        title: String,
+        path: String,
+        model: DefaultsValueModel<String>,
+        fallback: NSColor
+    ) -> some View {
+        SettingsCardRow(configurationReview: .json(path), title) {
+            ColorPicker(
+                "",
+                selection: Binding(
+                    get: { Color(cmuxHex: model.current) ?? Color(nsColor: fallback) },
+                    set: { model.set($0.cmuxHexString) }
+                ),
+                supportsOpacity: false
+            )
+            .labelsHidden()
+            .controlSize(.small)
+        }
+    }
 
     @ViewBuilder
     private func notificationSoundRow(model: DefaultsValueModel<String>) -> some View {

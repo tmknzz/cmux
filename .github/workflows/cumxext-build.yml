@@ -1,0 +1,56 @@
+name: CUMXext Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "codex/cumxext-*"
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          submodules: recursive
+
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          xcodebuild -version
+
+      - name: Install build deps
+        run: |
+          ./scripts/install-rust-ci.sh
+          ./scripts/install-zig-ci.sh
+
+      - name: Download pre-built GhosttyKit.xcframework
+        run: ./scripts/download-prebuilt-ghosttykit.sh
+
+      - name: Build CUMXext
+        run: |
+          set -euo pipefail
+          xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Release \
+            -derivedDataPath build-cumxext \
+            -destination 'generic/platform=macOS' \
+            ARCHS=arm64 ONLY_ACTIVE_ARCH=YES \
+            CODE_SIGNING_ALLOWED=NO build
+
+          APP_DIR="build-cumxext/Build/Products/Release"
+          mv "$APP_DIR/cmux.app" "$APP_DIR/CUMXext.app"
+          PLIST="$APP_DIR/CUMXext.app/Contents/Info.plist"
+          plutil -replace CFBundleName -string CUMXext "$PLIST"
+          plutil -replace CFBundleDisplayName -string CUMXext "$PLIST"
+          plutil -replace CFBundleIdentifier -string com.cmuxterm.app.cumxext "$PLIST"
+          xattr -cr "$APP_DIR/CUMXext.app"
+          codesign --force --deep --sign - "$APP_DIR/CUMXext.app"
+          ditto -c -k --sequesterRsrc --keepParent "$APP_DIR/CUMXext.app" CUMXext.zip
+
+      - name: Upload CUMXext
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: CUMXext
+          path: CUMXext.zip
+          if-no-files-found: error

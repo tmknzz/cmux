@@ -25,6 +25,7 @@ public struct SettingCatalog: SettingCatalogSection {
     public let app = AppCatalogSection()
     public let terminal = TerminalCatalogSection()
     public let notifications = NotificationsCatalogSection()
+    public let paneAppearance = PaneAppearanceCatalogSection()
     public let sidebar = SidebarCatalogSection()
     public let sidebarAppearance = SidebarAppearanceCatalogSection()
     public let workspaceColors = WorkspaceColorsCatalogSection()
