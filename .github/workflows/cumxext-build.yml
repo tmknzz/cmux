@@ -26,8 +26,8 @@ jobs:
           ./scripts/install-rust-ci.sh
           ./scripts/install-zig-ci.sh
 
-      - name: Download pre-built GhosttyKit.xcframework
-        run: ./scripts/download-prebuilt-ghosttykit.sh
+      - name: Build GhosttyKit.xcframework
+        run: CMUX_GHOSTTYKIT_NO_PREBUILT=1 ./scripts/ensure-ghosttykit.sh
 
       - name: Build CUMXext
         run: |
