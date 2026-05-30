@@ -146,6 +146,11 @@ if [[ ! -f "$GHOSTTY_DIR/build.zig" ]]; then
   exit 1
 fi
 
+supports_crash_report_subdir() {
+  grep -R -- "-Dcrash-report-subdir" "$GHOSTTY_DIR/build.zig" "$GHOSTTY_DIR/src/build" >/dev/null 2>&1 ||
+    grep -R -- "crash-report-subdir" "$GHOSTTY_DIR/build.zig" "$GHOSTTY_DIR/src/build" >/dev/null 2>&1
+}
+
 build_helper() {
   local prefix="$1"
   local target="${2:-}"
@@ -169,13 +174,16 @@ build_helper() {
     build
     cli-helper
     -Dapp-runtime=none
-    -Dcrash-report-subdir=cmux/crash
     -Demit-macos-app=false
     -Demit-xcframework=false
     -Doptimize=ReleaseFast
     --prefix
     "$prefix"
   )
+
+  if supports_crash_report_subdir; then
+    args+=("-Dcrash-report-subdir=cmux/crash")
+  fi
 
   if [[ -n "$effective_target" ]]; then
     args+=("-Dtarget=$effective_target")
