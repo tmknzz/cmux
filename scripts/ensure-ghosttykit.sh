@@ -236,6 +236,7 @@ else
       cd ghostty
       GHOSTTYKIT_BUILD_ARGS=(
         -Demit-xcframework=true
+        -Demit-macos-app=false
         -Dxcframework-target=universal
         -Doptimize=ReleaseFast
       )
